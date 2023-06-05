@@ -1,3 +1,4 @@
+OLEG HUI SOSI
 git clone --recursive https://github.com/v310r/LearnOpenGL.git -> to correctly clone the repo.
 
 This repository is made only for learning purposes. Everything was taken from https://learnopengl.com/. 
