@@ -38,6 +38,11 @@ project "LearnOpenGL"
         "%{prj.location}/vendor/GLAD/include"
     }
 
+    links
+    {
+        "glfw"
+    }
+
     filter "system:windows"
         systemversion = "latest"
 
