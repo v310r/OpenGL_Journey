@@ -17,4 +17,4 @@ P.S. to build the whole project, you'll need to firstly run CMake on glfw projec
 
 ![image](https://github.com/v310r/LearnOpenGL/assets/80487632/34be7375-af83-4d8d-8972-0adc764bb01d)
 
-     And you should already be ready to compile and run the program :D.
+     And now you should be ready to compile and run the program :D.
