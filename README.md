@@ -13,8 +13,8 @@ P.S. to build the whole project, you'll need to firstly run CMake on glfw projec
 
  ![image](https://github.com/v310r/LearnOpenGL/assets/80487632/213ffa91-64b1-4133-ae1f-164e51295438)
 
-     Then, open LearnOpenGL solution and add glfm reference to the LearnOpenGL project 
+     Then run GenerateProject.bat. Next -> open LearnOpenGL solution and add glfm reference to the LearnOpenGL project. 
 
 ![image](https://github.com/v310r/LearnOpenGL/assets/80487632/34be7375-af83-4d8d-8972-0adc764bb01d)
 
-     And you should already be ready to compile and run the program :D
+     And you should already be ready to compile and run the program :D.
