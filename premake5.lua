@@ -38,22 +38,6 @@ project "LearnOpenGL"
         "%{prj.location}/vendor/GLAD/include"
     }
 
-    libdirs
-    {
-        "%{prj.location}/build/glfw/bin/Debug-x64"
-        --"extern/SFML-2.5.1/lib"
-    }
-
-    links
-    {
-        "glfw3.lib",
-        "opengl32.lib",
-        "kernel32.lib",
-        "user32.lib",
-        "gdi32.lib"
-
-    }
-
     filter "system:windows"
         systemversion = "latest"
 
@@ -62,16 +46,19 @@ project "LearnOpenGL"
             "_CONSOLE",
         }
     
+        links
+        {
+            "opengl32.lib",
+            "kernel32.lib",
+            "user32.lib",
+            "gdi32.lib"
+        }
+
         filter "configurations:Debug"
             symbols "On"
             defines
             {
                 "_DEBUG"
-            }
-
-            links
-            {
-
             }
         
         filter "configurations:Release"
@@ -79,11 +66,6 @@ project "LearnOpenGL"
             defines
             {
                 "NDEBUG"
-            }
-
-            links
-            {
-
             }
 
     externalproject "glfw"

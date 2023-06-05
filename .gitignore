@@ -6,6 +6,12 @@
 #standard build folder
 build/
 
+#VisualStudio custom
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+
 # User-specific files
 *.rsuser
 *.suo
