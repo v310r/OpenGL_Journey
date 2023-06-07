@@ -154,19 +154,6 @@ int main()
 
 	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
 
-	// you can try to uncomment this code and comment code in loop
-
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	//glfwSwapBuffers(window);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-	// if you've commented code in loop and uncommented the above code, then try to resize the window :D
-	// the rectangle will disappear. It just an educational example, you can contemplate about it a little
-	// but of course everything can be fixed either uncommenting the loop code and commenting above code
-	// or fixing the OnWindowResize function.
-
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -175,15 +162,9 @@ int main()
 		glfwPollEvents();
 		ProcessInput(window);
 
-		// below code can be commented
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
-		// above code can be commented
-
-		// still, even using this code in a loop, rectangle will disappear when resizing :D.
-		// Once again, I've done it only for educational purposes, for contemplation
-		// there is no need to fix it.
 	}
 
 	glfwTerminate();
