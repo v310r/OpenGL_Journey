@@ -4,10 +4,10 @@ This repository is made only for learning purposes. Everything was taken from ht
 
 If you'll find this useful, than I'd be glad. You might notice, that such copies already exist, but who cares :D. At least it'd be useful to me. 
 
-Every branch of this repo corresponds to some chapter. Choose whatever you like or need.
+chapters are located in folder "chapters" :D.
 
 
-Currently, only the windows platform is supported, but as time passes, additional platforms might be added :-).
+Only the windows platform is tested :-).
 
 Have a nice day :D.
 
@@ -15,4 +15,4 @@ P.S. to build the whole project, you'll need to firstly run CMake on glfw projec
 
  ![image](https://github.com/v310r/LearnOpenGL/assets/80487632/213ffa91-64b1-4133-ae1f-164e51295438)
 
-     Then run GenerateProject.bat and open solution. Now you should be ready to compile and run the program :D.
+     Then run GenerateProjects.bat you should be ready to compile and run the program :D.
