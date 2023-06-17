@@ -1,7 +1,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-#include "Shader/Shader.h"
+#include "Shader1/Shader.h"
 #include "iostream"
 
 int g_WindowWidth = 800;

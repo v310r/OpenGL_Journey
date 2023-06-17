@@ -13,9 +13,10 @@ function setupCommonWindowsSettings()
     {
         "%{prj.location}/src/**.h",
         "%{prj.location}/src/**.cpp",
+        "%{prj.location}/shaders/**",
         "%{wks.location}/common_src/**.c",
         "%{wks.location}/common_src/**.h",
-        "%{wks.location}/common_src/**.cpp"
+        "%{wks.location}/common_src/**.cpp" 
     }
 
     includedirs
