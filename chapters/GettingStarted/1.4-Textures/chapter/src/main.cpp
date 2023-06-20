@@ -3,6 +3,8 @@
 
 #include "Shader1/Shader.h"
 #include "iostream"
+#include "stb_image.h"
+
 
 int g_WindowWidth = 800;
 int g_WindowHeight = 600;
@@ -58,11 +60,69 @@ int main()
 	
 	float vertices[] = 
 	{
-		// vertices				// color
-		0.5f, -0.5f, 0.0f,   	1.0f, 0.0f, 0.0f,		// bottom right
-		-0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,		// bottom left
-	   	0.0f, 0.5f, 0.0f,		0.0f, 0.0f, 1.0f		// top
+		// positions          // colors           // texture coords
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 	};
+
+	unsigned int indices[] =
+	{
+		0, 1, 3,
+		1, 2, 3
+	};
+
+	unsigned int textures[2];
+	glGenTextures(2, textures);
+
+	for (size_t i = 0; i < 2; ++i)
+	{
+		glBindTexture(GL_TEXTURE_2D, textures[i]);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
+
+	stbi_set_flip_vertically_on_load(true);
+
+	int width, height, NumColorChannels;
+	std::string woodenContainerPath = (std::string(ASSETS_PATH) + "/wooden_container.jpg");
+	unsigned char* data = stbi_load(woodenContainerPath.data(), &width, &height, &NumColorChannels, 0);
+	
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cerr << "Failed to load texture" << std::endl;
+	}
+
+	stbi_image_free(data);
+
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
+
+
+	std::string awesomeFacePath = (std::string(ASSETS_PATH) + "/awesomeface.png");
+	data = stbi_load(awesomeFacePath.data(), &width, &height, &NumColorChannels, 0);
+
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cerr << "Failed to load texture" << std::endl;
+	}
+
+	stbi_image_free(data);
 
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
@@ -73,10 +133,18 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	unsigned int EBO;
+	glGenBuffers(1, &EBO);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	// this was done for learning purposes. Notice that VAO should be always Unbound first!
 	glBindVertexArray(0);
@@ -85,13 +153,18 @@ int main()
 
 	Shader defaultShader("shaders/shader.vert", "shaders/shader.frag");
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
 	glBindVertexArray(VAO);
 	defaultShader.use();
 
-	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
+	defaultShader.setInt("texture1", 0);
+	defaultShader.setInt("texture2", 1);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	
+	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -100,7 +173,7 @@ int main()
 
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 	}
 
