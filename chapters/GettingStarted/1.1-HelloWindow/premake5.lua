@@ -1,4 +1,3 @@
-
 group "GettingStarted"
 
     group "GettingStarted.1.1-HelloWindow"
