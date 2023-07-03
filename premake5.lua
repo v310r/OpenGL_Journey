@@ -26,7 +26,7 @@ workspace "LearnOpenGL"
         kind "StaticLib"
         language "C++"
 
-    dofile("vendor/glm/premake5.lua")
+    dofile("vendor/premake5_glm.lua")
 
     dofile("vendor/GLAD/premake5.lua")
 
