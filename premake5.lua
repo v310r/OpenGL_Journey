@@ -26,6 +26,11 @@ workspace "LearnOpenGL"
         kind "StaticLib"
         language "C++"
 
+    dofile("vendor/glm/premake5.lua")
+
+    dofile("vendor/GLAD/premake5.lua")
+
+    dofile("vendor/stb_image/premake5.lua")
 
     dofile("chapters/GettingStarted/1.1-HelloWindow/premake5.lua")
 
@@ -34,6 +39,8 @@ workspace "LearnOpenGL"
     dofile("chapters/GettingStarted/1.3-Shaders/premake5.lua")
 
     dofile("chapters/GettingStarted/1.4-Textures/premake5.lua")
+
+    dofile("chapters/GettingStarted/1.5-Transformations/premake5.lua")
 
 
 

@@ -14,9 +14,8 @@ function setupCommonWindowsSettings()
         "%{prj.location}/src/**.h",
         "%{prj.location}/src/**.cpp",
         "%{prj.location}/shaders/**",
-        "%{wks.location}/common_src/**.c",
         "%{wks.location}/common_src/**.h",
-        "%{wks.location}/common_src/**.cpp" 
+        "%{wks.location}/common_src/**.cpp"
     }
 
     includedirs
@@ -24,12 +23,16 @@ function setupCommonWindowsSettings()
         "%{prj.location}/src",
         "%{wks.location}/common_src",
         "%{wks.location}/vendor/glfw/include",
-        "%{wks.location}/vendor/GLAD/include"
+        "%{wks.location}/vendor/GLAD/include",
+        "%{wks.location}/vendor/stb_image",
+        "%{wks.location}/vendor/glm/glm"
     }
 
     links
     {
-        "glfw"
+        "glfw",
+        "stb_image",
+        "GLAD"
     }
 
     filter "system:windows"
