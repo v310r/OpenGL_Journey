@@ -165,10 +165,10 @@ int main()
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, textures[1]);
 	glBindVertexArray(VAO);
-	defaultShader.use();
+	defaultShader.Bind();
 
-	defaultShader.setInt("texture1", 0);
-	defaultShader.setInt("texture2", 1);
+	defaultShader.SetInt("texture1", 0);
+	defaultShader.SetInt("texture2", 1);
 
 	
 	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);

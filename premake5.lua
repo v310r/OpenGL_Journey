@@ -28,9 +28,13 @@ workspace "LearnOpenGL"
 
     dofile("vendor/premake5_glm.lua")
 
+    dofile("vendor/premake5_imgui.lua")
+
     dofile("vendor/GLAD/premake5.lua")
 
     dofile("vendor/stb_image/premake5.lua")
+
+    -----------------------------------------------------------------------------------
 
     dofile("chapters/GettingStarted/1.1-HelloWindow/premake5.lua")
 

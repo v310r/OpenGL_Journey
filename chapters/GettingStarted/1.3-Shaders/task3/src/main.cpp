@@ -86,7 +86,7 @@ int main()
 	Shader defaultShader("shaders/shader.vert", "shaders/shader.frag");
 
 	glBindVertexArray(VAO);
-	defaultShader.use();
+	defaultShader.Bind();
 
 	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
 

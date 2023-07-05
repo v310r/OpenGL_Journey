@@ -168,10 +168,10 @@ int main()
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, textures[1]);
 	glBindVertexArray(VAO);
-	defaultShader.use();
+	defaultShader.Bind();
 
-	defaultShader.setInt("texture1", 0);
-	defaultShader.setInt("texture2", 1);
+	defaultShader.SetInt("texture1", 0);
+	defaultShader.SetInt("texture2", 1);
 
 	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
 	
@@ -191,7 +191,7 @@ int main()
 			mixFactor = std::clamp(mixFactor - 0.01f, 0.0f, 1.0f);
 		}
 
-		defaultShader.setFloat("mixFactor", mixFactor);
+		defaultShader.SetFloat("mixFactor", mixFactor);
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

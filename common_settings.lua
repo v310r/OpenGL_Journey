@@ -25,14 +25,16 @@ function setupCommonWindowsSettings()
         "%{wks.location}/vendor/glfw/include",
         "%{wks.location}/vendor/GLAD/include",
         "%{wks.location}/vendor/stb_image",
-        "%{wks.location}/vendor/glm/glm"
+        "%{wks.location}/vendor/glm/glm",
+        "%{wks.location}/vendor/imgui_includes"
     }
 
     links
     {
         "glfw",
         "stb_image",
-        "GLAD"
+        "GLAD",
+        "imgui"
     }
 
     filter "system:windows"
