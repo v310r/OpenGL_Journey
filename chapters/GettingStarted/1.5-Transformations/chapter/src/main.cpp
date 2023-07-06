@@ -201,6 +201,7 @@ int main()
 
 
 	unsigned int transformLoc = glGetUniformLocation(defaultShader.GetID(), "transform");
+	glm::vec3 translationVector = glm::vec3(0.5f, -0.5f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -208,7 +209,7 @@ int main()
 		ProcessInput(window);
 
 		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::translate(trans, translationVector);
 		trans = glm::rotate(trans, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
@@ -221,25 +222,10 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-		{
-			static float f = 0.0f;
-			static int counter = 0;
-
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
-			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-			ImGui::End();
-		}
+		ImGui::Begin("square object");
+		ImGui::SliderFloat("x offset", &translationVector.x, 0.0f, 1.0f);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+		ImGui::End();
 
 		ImGui::EndFrame();
 		// Rendering
