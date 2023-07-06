@@ -87,8 +87,8 @@ int main()
 
 
 	glBindVertexArray(VAO);
-	defaultShader.use();
-	defaultShader.setFloat("horizontalOffset", 0.5f);
+	defaultShader.Bind();
+	defaultShader.SetFloat("horizontalOffset", 0.5f);
 
 	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
 
