@@ -46,5 +46,5 @@ workspace "LearnOpenGL"
 
     dofile("chapters/GettingStarted/1.5-Transformations/premake5.lua")
 
-
+    dofile("chapters/GettingStarted/1.6-CoordinateSystems/premake5.lua")
 
