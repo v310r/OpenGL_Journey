@@ -13,6 +13,12 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/VertexArray.h"
+#include "Buffers/IndexBuffer.h"
+#include "Buffers/BufferLayout.h"
+
+
 int g_WindowWidth = 800;
 int g_WindowHeight = 600;
 
@@ -77,16 +83,16 @@ void OnMouseMoved(GLFWwindow* window, double xPos, double yPos)
 {
 	if (g_bFirstMouseInput)
 	{
-		g_MouseLastX = xPos;
-		g_MouseLastY = yPos;
+		g_MouseLastX = static_cast<float>(xPos);
+		g_MouseLastY = static_cast<float>(yPos);
 		g_bFirstMouseInput = false;
 	}
 
-	float xOffset = xPos - g_MouseLastX;
-	float yOffset = yPos - g_MouseLastY;
+	float xOffset = static_cast<float>(xPos) - g_MouseLastX;
+	float yOffset = static_cast<float>(yPos) - g_MouseLastY;
 
-	g_MouseLastX = xPos;
-	g_MouseLastY = yPos;
+	g_MouseLastX = static_cast<float>(xPos);
+	g_MouseLastY = static_cast<float>(yPos);
 
 	const float sensitivity = 0.1f;
 	xOffset *= sensitivity;
@@ -282,15 +288,26 @@ int main()
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	VertexBuffer vb(vertices, sizeof(vertices));
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	BufferLayout bl =
+	{
+		{ShaderUtility::ShaderDataType::Float3, "aPos"},
+		{ShaderUtility::ShaderDataType::Float2, "aTexCoord"}
+	};
+
+	size_t index = 0;
+	for (BufferAttribute& attribute : bl)
+	{
+		glVertexAttribPointer(index, attribute.Count, ConvertShaderDataTypeToOpenGLType(attribute.Type), attribute.bNormalized ? GL_TRUE : GL_FALSE, bl.GetStride(), (const void*)attribute.Offset);
+		glEnableVertexAttribArray(index);
+		++index;
+	}
+
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
 
 	// this was done for learning purposes. Notice that VAO should be always Unbound first!
 	glBindVertexArray(0);
@@ -328,7 +345,7 @@ int main()
 	glm::vec3 translationVector = glm::vec3(0.0f, 0.0f, 0.0f);
 	while (!glfwWindowShouldClose(window))
 	{
-		float currentFrame = glfwGetTime();
+		float currentFrame = static_cast<float>(glfwGetTime());
 		g_DeltaTime = currentFrame - g_LastFrameTime;
 		g_LastFrameTime = currentFrame;
 
