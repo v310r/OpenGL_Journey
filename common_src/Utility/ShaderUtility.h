@@ -20,9 +20,9 @@ namespace ShaderUtility
         Bool
     };
 
-    size_t GetShaderDataTypeSizeInBytes(ShaderDataType type);
+    unsigned int GetShaderDataTypeSizeInBytes(ShaderDataType type);
 
-    size_t GetShaderDataTypeCount(ShaderDataType type);
+    unsigned int GetShaderDataTypeCount(ShaderDataType type);
 
     GLenum ConvertShaderDataTypeToOpenGLType(ShaderDataType type);
 }

@@ -3,7 +3,7 @@
 
 VertexBuffer::VertexBuffer(float* vertices, size_t size, GLenum usage)
 {
-	glGenBuffers(1, &m_Id);
+	glCreateBuffers(1, &m_Id);
 	glBindBuffer(GL_ARRAY_BUFFER, m_Id);
 	glBufferData(GL_ARRAY_BUFFER, size, vertices, usage);
 }

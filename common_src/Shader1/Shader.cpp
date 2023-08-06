@@ -77,3 +77,27 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
 	glDeleteShader(vertexShaderID);
 	glDeleteShader(fragmentShaderID);
 }
+
+void Shader::SetBool(const std::string& name, bool value) const 
+{ 
+	GLint location = glGetUniformLocation(m_ID, name.data());
+	glUniform1ui(location, static_cast<unsigned int>(value));
+}
+
+void Shader::SetInt(const std::string& name, int value) const 
+{ 
+	GLint location = glGetUniformLocation(m_ID, name.data());
+	glUniform1i(location, value);
+}
+
+void Shader::SetFloat(const std::string& name, float value) const 
+{ 
+	GLint location = glGetUniformLocation(m_ID, name.data());
+	glUniform1f(location, value);
+}
+
+void Shader::SetMat4(const std::string& name, glm::mat4& matrix, int count, bool bTranspose) const
+{
+	GLint location = glGetUniformLocation(m_ID, name.data());
+	glUniformMatrix4fv(location, count, bTranspose, glm::value_ptr(matrix));
+}

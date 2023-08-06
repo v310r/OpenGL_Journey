@@ -11,7 +11,7 @@ BufferLayout::BufferLayout(const std::initializer_list<BufferAttribute>& attribu
 
 void BufferLayout::ComputeStrideAndOffset()
 {
-    size_t offset = 0;
+    uint32_t offset = 0;
     for (BufferAttribute& attribute : m_BufferAttributes)
     {
         attribute.Offset += offset;

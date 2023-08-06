@@ -3,7 +3,7 @@
 #include <cassert>
 
 
-size_t ShaderUtility::GetShaderDataTypeSizeInBytes(ShaderUtility::ShaderDataType type)
+unsigned int ShaderUtility::GetShaderDataTypeSizeInBytes(ShaderUtility::ShaderDataType type)
 {
     switch (type)
     {
@@ -23,7 +23,7 @@ size_t ShaderUtility::GetShaderDataTypeSizeInBytes(ShaderUtility::ShaderDataType
     }
 }
 
-size_t ShaderUtility::GetShaderDataTypeCount(ShaderDataType type)
+unsigned int ShaderUtility::GetShaderDataTypeCount(ShaderDataType type)
 {
     switch (type)
     {

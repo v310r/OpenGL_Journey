@@ -16,27 +16,29 @@ struct BufferAttribute
     ShaderUtility::ShaderDataType Type;
     std::string Name;
     bool bNormalized;
-    size_t SizeInBytes;
-    size_t Offset;
-    size_t Count;
+    uint32_t SizeInBytes;
+    uint32_t Offset;
+    uint32_t Count;
 };
 
 class BufferLayout
 {
 public:
+    BufferLayout() {}
+
     BufferLayout(const std::initializer_list<BufferAttribute>& attributes);
 
-    size_t GetStride() const { return m_Stride; }
+    uint32_t GetStride() const { return m_Stride; }
 
     std::vector<BufferAttribute>::iterator begin() { return m_BufferAttributes.begin(); }
     std::vector<BufferAttribute>::iterator end() { return m_BufferAttributes.end(); }
-    std::vector<BufferAttribute>::const_iterator cbegin() const { return m_BufferAttributes.cbegin(); }
-    std::vector<BufferAttribute>::const_iterator cend() const { return m_BufferAttributes.cend(); }
+    std::vector<BufferAttribute>::const_iterator begin() const { return m_BufferAttributes.begin(); }
+    std::vector<BufferAttribute>::const_iterator end() const { return m_BufferAttributes.end(); }
 
 
 private:
     void ComputeStrideAndOffset();
 
-    size_t m_Stride;
+    uint32_t m_Stride;
     std::vector<BufferAttribute> m_BufferAttributes;
 };
