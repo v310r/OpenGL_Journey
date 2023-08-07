@@ -124,10 +124,10 @@ int main()
 
     std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, sizeof(vertices));
     vb->SetLayout(
-        {
-            {ShaderUtility::ShaderDataType::Float3, "aPos"},
-            {ShaderUtility::ShaderDataType::Float2, "aTexCoord"}
-        });
+    {
+        {ShaderUtility::ShaderDataType::Float3, "aPos"},
+        {ShaderUtility::ShaderDataType::Float2, "aTexCoord"}
+    });
 
     VAO->AddVertexBuffer(vb);
 

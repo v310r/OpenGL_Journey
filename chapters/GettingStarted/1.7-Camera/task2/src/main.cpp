@@ -124,10 +124,10 @@ int main()
 
     std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, sizeof(vertices));
     vb->SetLayout(
-        {
-            {ShaderUtility::ShaderDataType::Float3, "aPos"},
-            {ShaderUtility::ShaderDataType::Float2, "aTexCoord"}
-        });
+    {
+        {ShaderUtility::ShaderDataType::Float3, "aPos"},
+        {ShaderUtility::ShaderDataType::Float2, "aTexCoord"}
+    });
 
     VAO->AddVertexBuffer(vb);
 
@@ -173,8 +173,6 @@ int main()
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, translationVector);
             model = glm::translate(model, cubePositions[i]);
-            //float angle = 20.0f * i;
-            //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             model = glm::rotate(model, glm::radians(rotationVector.x), glm::vec3(1.0f, 0.0f, 0.0f));
             model = glm::rotate(model, glm::radians(rotationVector.y), glm::vec3(0.0f, 1.0f, 0.0f));
             model = glm::rotate(model, glm::radians(rotationVector.z), glm::vec3(0.0f, 0.0f, 1.0f));
