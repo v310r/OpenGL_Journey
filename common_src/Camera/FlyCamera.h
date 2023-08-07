@@ -40,6 +40,7 @@ public:
 
     glm::vec3 GetPosition() const { return m_Position; }
     void SetPosition(glm::vec3 value) { m_Position = value; }
+    void SetPosition(float x, float y, float z) { SetPosition({ x, y, z }); }
 
     float GetSpeed() const { return m_MovementSpeed; }
     void SetSpeed(float value) { m_MovementSpeed = value; }

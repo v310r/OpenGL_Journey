@@ -1,5 +1,5 @@
-workspace "LearnOpenGL"
-    startproject "LearnOpenGL"
+workspace "OpenGL_Journey"
+    startproject "OpenGL_Journey"
     architecture "x86_64"
 
     configurations
@@ -21,10 +21,7 @@ workspace "LearnOpenGL"
 
     defines { "ASSETS_PATH=\"%{wks.location}/assets\"" }
 
-    externalproject "glfw"
-        location "%{wks.location}/vendor/glfw/build/src"
-        kind "StaticLib"
-        language "C++"
+    dofile("vendor/premake5_glfw.lua")
 
     dofile("vendor/premake5_glm.lua")
 

@@ -35,17 +35,34 @@ void FlyCamera::ProcessKeyboard(CameraMovement direction, float deltaTime)
 {
     float velocity = m_MovementSpeed * deltaTime;
     if (direction == CameraMovement::FORWARD)
+    {
         m_Position += m_Front * velocity;
+    }
+
     if (direction == CameraMovement::BACKWARD)
+    {
         m_Position -= m_Front * velocity;
+    }
+
     if (direction == CameraMovement::LEFT)
+    {
         m_Position -= m_Right * velocity;
+    }
+
     if (direction == CameraMovement::RIGHT)
+    {
         m_Position += m_Right * velocity;
+    }
+
     if (direction == CameraMovement::UP)
+    {
         m_Position.y += velocity;
+    }
+
     if (direction == CameraMovement::DOWN)
+    {
         m_Position.y -=  velocity;
+    }
 }
 
 void FlyCamera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)

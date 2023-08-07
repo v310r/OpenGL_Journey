@@ -3,7 +3,7 @@ project "imgui"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "Off"
+    staticruntime "On"
 
     targetdir ("%{prj.location}/build/bin/" .. outputdir)
     objdir ("%{prj.location}/build/intermediate/" .. outputdir)

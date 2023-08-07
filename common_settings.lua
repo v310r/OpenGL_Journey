@@ -2,7 +2,7 @@ function setupCommonWindowsSettings()
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "Off"
+    staticruntime "On"
 
     debugdir "%{prj.location}"
 
@@ -13,9 +13,7 @@ function setupCommonWindowsSettings()
     {
         "%{prj.location}/src/**.h",
         "%{prj.location}/src/**.cpp",
-        "%{prj.location}/shaders/**",
-        "%{wks.location}/common_src/**.h",
-        "%{wks.location}/common_src/**.cpp"
+        "%{prj.location}/shaders/**"
     }
 
     includedirs

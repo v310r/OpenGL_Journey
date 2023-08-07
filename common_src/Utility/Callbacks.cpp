@@ -55,7 +55,7 @@ void Callbacks::OnMouseMoved(GLFWwindow* window, double xPos, double yPos)
 
 void Callbacks::OnMouseScrolled(GLFWwindow* window, double xOffset, double yOffset)
 {
-    g_Camera.ProcessMouseScroll(yOffset);
+    g_Camera.ProcessMouseScroll(static_cast<float>(yOffset));
 }
 
 void Callbacks::OnMouseButtonAction(GLFWwindow* window, int button, int action, int mods)

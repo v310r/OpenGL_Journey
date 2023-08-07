@@ -1,21 +1,38 @@
-project "stb_image"
-    location "%{wks.location}/vendor/stb_image"
+project "glfw"
+    location "%{wks.location}/vendor/glfw"
     kind "StaticLib"
-    language "C++"
-    cppdialect "C++17"
+    language "C"
+    cdialect "C17"
     staticruntime "On"
+
+    debugdir "%{prj.location}"
 
     targetdir ("%{prj.location}/build/bin/" .. outputdir)
     objdir ("%{prj.location}/build/intermediate/" .. outputdir)
 
     files
     {
-        "%{prj.location}/stb_image.h",
-        "%{prj.location}/stb_image.cpp"
+        "%{prj.location}/src/**.h",
+        "%{prj.location}/src/**.c"
+    }
+
+    includedirs
+    {
+        "%{wks.location}/vendor/glfw/include"
     }
 
     filter "system:windows"
         systemversion = "latest"
+
+        defines
+        {
+            "WIN32",
+            "_WINDOWS",
+            "_GLFW_WIN32",
+            "UNICODE",
+            "_UNICODE",
+            "_CRT_SECURE_NO_WARNINGS"
+        }
 
         filter "configurations:Debug"
             symbols "On"

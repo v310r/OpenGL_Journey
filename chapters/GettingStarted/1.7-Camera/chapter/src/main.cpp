@@ -159,8 +159,6 @@ int main()
 		glfwPollEvents();
 		Input::Process(window);
 
-		glm::vec3 direction;
-
 		glm::mat4 view = glm::mat4(1.0f);
 		view = g_Camera.GetViewMatrix();
         defaultShader.SetMat4("view", view);
@@ -175,8 +173,6 @@ int main()
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, translationVector);
             model = glm::translate(model, cubePositions[i]);
-            //float angle = 20.0f * i;
-			//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			model = glm::rotate(model, glm::radians(rotationVector.x), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotationVector.y), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotationVector.z), glm::vec3(0.0f, 0.0f, 1.0f));
