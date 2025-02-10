@@ -23,6 +23,8 @@ workspace "OpenGL_Journey"
 
     dofile("vendor/premake5_glfw.lua")
 
+    dofile("vendor/premake5_spdlog.lua")
+
     dofile("vendor/premake5_glm.lua")
 
     dofile("vendor/premake5_imgui.lua")
@@ -33,6 +35,8 @@ workspace "OpenGL_Journey"
 
     -----------------------------------------------------------------------------------
 
+    -- GettingStarted
+    -----------------------------------------------------------------------------------
     dofile("chapters/GettingStarted/1.1-HelloWindow/premake5.lua")
 
     dofile("chapters/GettingStarted/1.2-HelloTriangle/premake5.lua")
@@ -46,5 +50,18 @@ workspace "OpenGL_Journey"
     dofile("chapters/GettingStarted/1.6-CoordinateSystems/premake5.lua")
 
     dofile("chapters/GettingStarted/1.7-Camera/premake5.lua")
+    -----------------------------------------------------------------------------------
 
+    -- Lighting
+    -----------------------------------------------------------------------------------
+    dofile("chapters/Lighting/2.1-Colors/premake5.lua")
 
+    dofile("chapters/Lighting/2.2-BasicLighting/premake5.lua")
+
+    dofile("chapters/Lighting/2.3-Materials/premake5.lua")
+
+    dofile("chapters/Lighting/2.4-LightingMaps/premake5.lua")
+
+    dofile("chapters/Lighting/2.5-LightCasters/premake5.lua")
+
+    dofile("chapters/Lighting/2.6-MultipleLights/premake5.lua")

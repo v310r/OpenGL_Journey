@@ -14,7 +14,11 @@
 #include "Utility/Callbacks.h"
 #include "Input/Input.h"
 #include "Camera/FlyCamera.h"
-#include "Data.h"
+#include "Data/Data.h"
+#include "Utility/ShaderUtility.h"
+#include "Texture/Texture.h"
+#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer.h"
 
 
 int g_WindowWidth = 800;
@@ -35,11 +39,13 @@ int main()
 {
 	glfwInit();
 
+	stbi_set_flip_vertically_on_load(true);
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "LearnOpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "OpenGL_Journey", nullptr, nullptr);
 	if (!window)
 	{
 		std::cerr << "Failed to create GLFW window" << std::endl;
@@ -69,80 +75,54 @@ int main()
 
 	ImGuiWrapper::Init(window, "#version 460 core");
 
-	unsigned int textures[2];
-	glGenTextures(2, textures);
+	GLint maxTextureUnits;
+	glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+	std::cout << "Max Texture Units: " << maxTextureUnits << std::endl;
 
-	for (size_t i = 0; i < 2; ++i)
+	Texture woodenContainerAlbedoTexture(std::string(ASSETS_PATH) + "/wooden_container.jpg", 0, false);
+
+	Texture awesomeFaceAlbedoTexture(std::string(ASSETS_PATH) + "/awesomeface.png", 1);
+
+	std::shared_ptr<VertexArray> VAO = std::make_shared<VertexArray>();
 	{
-		glBindTexture(GL_TEXTURE_2D, textures[i]);
+		std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(g_TexturedCubeVertices, g_TexturedCubeVerticesSizeInBytes / sizeof(g_TexturedCubeVertices[0]));
+		vb->SetLayout(BufferLayout
+		{
+			{ShaderUtility::EShaderDataType::Float3, "aPos"},
+			{ShaderUtility::EShaderDataType::Float2, "aTexCoord"}
+		});
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		VAO->AddVertexBuffer(vb);
+
+		//std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>(g_CubeIndices, g_CubeIndicesSizeInBytes / sizeof(g_CubeIndices[0]));
+		//VAO->SetIndexBuffer(indexBuffer);
 	}
 
-	stbi_set_flip_vertically_on_load(true);
-
-	int width, height, NumColorChannels;
-	std::string woodenContainerPath = (std::string(ASSETS_PATH) + "/wooden_container.jpg");
-	unsigned char* data = stbi_load(woodenContainerPath.data(), &width, &height, &NumColorChannels, 0);
-	
-	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	if (data)
+	glm::vec3 cubePositions[] =
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cerr << "Failed to load texture" << std::endl;
-	}
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
-	stbi_image_free(data);
+	std::shared_ptr<Shader> defaultShader = std::make_shared<Shader>("shaders/shader.vert", "shaders/shader.frag");
 
-	glBindTexture(GL_TEXTURE_2D, textures[1]);
+	defaultShader->Bind();
 
+	woodenContainerAlbedoTexture.BindAndActivateUnit();
+	defaultShader->SetInt("texture1", woodenContainerAlbedoTexture.GetTextureUnit());
 
-	std::string awesomeFacePath = (std::string(ASSETS_PATH) + "/awesomeface.png");
-	data = stbi_load(awesomeFacePath.data(), &width, &height, &NumColorChannels, 0);
+	awesomeFaceAlbedoTexture.BindAndActivateUnit();
+	defaultShader->SetInt("texture2", awesomeFaceAlbedoTexture.GetTextureUnit());
 
-	glBindTexture(GL_TEXTURE_2D, textures[1]);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cerr << "Failed to load texture" << std::endl;
-	}
-
-	stbi_image_free(data);
-
-    std::shared_ptr<VertexArray> VAO = std::make_shared<VertexArray>();
-
-    std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, sizeof(vertices));
-	vb->SetLayout(
-    {
-        {ShaderUtility::ShaderDataType::Float3, "aPos"},
-        {ShaderUtility::ShaderDataType::Float2, "aTexCoord"}
-    });
-
-	VAO->AddVertexBuffer(vb);
-
-	Shader defaultShader("shaders/shader.vert", "shaders/shader.frag");
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textures[0]);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, textures[1]);
-
-	defaultShader.Bind();
-	defaultShader.SetInt("texture1", 0);
-	defaultShader.SetInt("texture2", 1);
-	
-	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
+	RenderCommand::SetClearColor({ 0.3f, 0.6f, 0.6f, 1.0f });
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -161,25 +141,30 @@ int main()
 
 		glm::mat4 view = glm::mat4(1.0f);
 		view = g_Camera.GetViewMatrix();
-        defaultShader.SetMat4("view", view);
+		defaultShader->SetMat4("view", view);
 
-        glm::mat4 projection = glm::perspective(glm::radians(g_Camera.GetZoom()), g_WindowWidth / (float)g_WindowWidth, 0.1f, 100.0f);
-        defaultShader.SetMat4("projection", projection);
+		glm::mat4 projection = glm::perspective(glm::radians(g_Camera.GetZoom()), g_WindowWidth / (float)g_WindowHeight, 0.1f, 100.0f);
+		defaultShader->SetMat4("projection", projection);
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		RenderCommand::ClearColor();
+
+		Renderer::BeginScene(g_Camera);
 
 		for (unsigned int i = 0; i < 10; i++)
 		{
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, translationVector);
-            model = glm::translate(model, cubePositions[i]);
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, translationVector);
+			model = glm::translate(model, cubePositions[i]);
 			model = glm::rotate(model, glm::radians(rotationVector.x), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotationVector.y), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(rotationVector.z), glm::vec3(0.0f, 0.0f, 1.0f));
 			model = glm::scale(model, scaleVector);
-            defaultShader.SetMat4("model", model);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			defaultShader->SetMat4("model", model);
+
+			Renderer::Draw(VAO, defaultShader);
 		}
+
+		Renderer::EndScene();
 
 		ImGuiWrapper::NewFrame();
 

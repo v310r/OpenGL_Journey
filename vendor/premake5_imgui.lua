@@ -3,7 +3,7 @@ project "imgui"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir ("%{prj.location}/build/bin/" .. outputdir)
     objdir ("%{prj.location}/build/intermediate/" .. outputdir)
@@ -21,7 +21,7 @@ project "imgui"
 
     includedirs
     {
-        "%{wks.location}/vendor/imgui_includes",
+        "%{wks.location}/vendor/imgui",
         "%{wks.location}/vendor/glfw/include"
     }
 

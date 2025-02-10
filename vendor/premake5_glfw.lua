@@ -3,7 +3,7 @@ project "glfw"
     kind "StaticLib"
     language "C"
     cdialect "C17"
-    staticruntime "On"
+    staticruntime "Off"
 
     debugdir "%{prj.location}"
 

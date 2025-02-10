@@ -3,7 +3,7 @@ project "glm"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "On"
+    staticruntime "Off"
 
     targetdir ("%{prj.location}/build/bin/" .. outputdir)
     objdir ("%{prj.location}/build/intermediate/" .. outputdir)

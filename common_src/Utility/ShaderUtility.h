@@ -5,24 +5,25 @@
 
 namespace ShaderUtility
 {
-    enum class ShaderDataType
-    {
-        Float,
-        Float2,
-        Float3,
-        Float4,
-        Int,
-        Int2,
-        Int3,
-        Int4,
-        Mat3,
-        Mat4,
-        Bool
-    };
+	enum class EShaderDataType
+	{
+		None = 0,
+		Float,
+		Float2,
+		Float3,
+		Float4,
+		Int,
+		Int2,
+		Int3,
+		Int4,
+		Mat3,
+		Mat4,
+		Bool
+	};
 
-    unsigned int GetShaderDataTypeSizeInBytes(ShaderDataType type);
+	unsigned int GetShaderDataTypeSizeInBytes(EShaderDataType type);
 
-    unsigned int GetShaderDataTypeCount(ShaderDataType type);
+	unsigned int GetShaderDataTypeCount(EShaderDataType type);
 
-    GLenum ConvertShaderDataTypeToOpenGLType(ShaderDataType type);
+	GLenum ConvertShaderDataTypeToOpenGLType(EShaderDataType type);
 }

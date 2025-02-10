@@ -19,5 +19,6 @@ public:
 
     static ImGuiIO* GetIO();
 
+protected:
     static ImGuiIO* s_IO;
 };

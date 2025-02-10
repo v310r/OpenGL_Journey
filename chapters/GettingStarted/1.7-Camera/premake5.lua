@@ -42,7 +42,9 @@ group "GettingStarted"
                 "%{wks.location}/common_src/Shader1/**.h",
                 "%{wks.location}/common_src/Shader1/**.cpp",
                 "%{wks.location}/common_src/Utility/**.h",
-                "%{wks.location}/common_src/Utility/**.cpp"             
+                "%{wks.location}/common_src/Utility/**.cpp",
+                "%{wks.location}/common_src/Data/**.h",
+                "%{wks.location}/common_src/Data/**.cpp"
             }
 
             setupCommonWindowsSettings()

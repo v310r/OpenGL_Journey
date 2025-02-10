@@ -21,13 +21,19 @@ public:
 
 	void Unbind() const { glUseProgram(0); }
 
-	void SetBool(const std::string& name, bool value) const;
+	void SetBool(std::string_view name, bool value) const;
 
-	void SetInt(const std::string& name, int value) const;
+	void SetInt(std::string_view name, int value) const;
 
-	void SetFloat(const std::string& name, float value) const;
+	void SetFloat(std::string_view name, float value) const;
+	void SetFloat3(std::string_view name, glm::vec3 value) const;
+	void SetFloat4(std::string_view name, glm::vec4 value) const;
 
-	void SetMat4(const std::string& name, glm::mat4& matrix, int count = 1, bool bTranspose = false) const;
+	void SetMat4(std::string_view name, glm::mat4& matrix, int count = 1, bool bTranspose = false) const;
+
+	// better make mat3 as reference, but right now It's too tedious to do for me ))
+	// I would need to cache model matrix as mat3 somewhere
+	void SetMat3(std::string_view name, glm::mat3 matrix, int count = 1, bool bTranspose = false) const;
 
 
 private:

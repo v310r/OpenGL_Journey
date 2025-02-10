@@ -49,7 +49,17 @@ glm::mat4 FlyCamera::GetViewMatrix()
     rotation[1][2] = frontVector.y;
     rotation[2][2] = frontVector.z;
 
-    return translation * rotation;
+    //rotation[0][0] = rightVector.x; // First column, first row
+    //rotation[0][1] = rightVector.y;
+    //rotation[0][2] = rightVector.z;
+    //rotation[1][0] = upVector.x; // First column, second row
+    //rotation[1][1] = upVector.y;
+    //rotation[1][2] = upVector.z;
+    //rotation[2][0] = frontVector.x; // First column, third row
+    //rotation[2][1] = frontVector.y;
+    //rotation[2][2] = frontVector.z;
+
+    return rotation * translation;
 
     //return glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 }

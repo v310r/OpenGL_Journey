@@ -14,7 +14,7 @@
 #include "Utility/Callbacks.h"
 #include "Input/Input.h"
 #include "Camera/FlyCamera.h"
-#include "Data.h"
+#include "Data/Data.h"
 
 
 int g_WindowWidth = 800;
@@ -39,7 +39,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "LearnOpenGL", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "OpenGL_Journey", nullptr, nullptr);
     if (!window)
     {
         std::cerr << "Failed to create GLFW window" << std::endl;
@@ -122,11 +122,11 @@ int main()
 
     std::shared_ptr<VertexArray> VAO = std::make_shared<VertexArray>();
 
-    std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(vertices, sizeof(vertices));
+    std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(g_TexturedCubeVertices, g_TexturedCubeVerticesSizeInBytes / sizeof(g_TexturedCubeVertices[0]));
     vb->SetLayout(
     {
-        {ShaderUtility::ShaderDataType::Float3, "aPos"},
-        {ShaderUtility::ShaderDataType::Float2, "aTexCoord"}
+        {ShaderUtility::EShaderDataType::Float3, "aPos"},
+        {ShaderUtility::EShaderDataType::Float2, "aTexCoord"}
     });
 
     VAO->AddVertexBuffer(vb);
@@ -141,6 +141,20 @@ int main()
     defaultShader.Bind();
     defaultShader.SetInt("texture1", 0);
     defaultShader.SetInt("texture2", 1);
+
+	glm::vec3 cubePositions[] =
+	{
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
     glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
 
@@ -162,8 +176,8 @@ int main()
         glm::mat4 view = glm::mat4(1.0f);
         view = g_Camera.GetViewMatrix();
         defaultShader.SetMat4("view", view);
-
-        glm::mat4 projection = glm::perspective(glm::radians(g_Camera.GetZoom()), g_WindowWidth / (float)g_WindowWidth, 0.1f, 100.0f);
+        
+        glm::mat4 projection = glm::perspective(glm::radians(g_Camera.GetZoom()), g_WindowWidth / (float)g_WindowHeight, 0.1f, 100.0f);
         defaultShader.SetMat4("projection", projection);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -183,25 +197,28 @@ int main()
 
         ImGuiWrapper::NewFrame();
 
-        ImGui::Begin("Cubes");
-        ImGui::SliderFloat("Translate X", &translationVector.x, -1.0f, 1.0f);
-        ImGui::SliderFloat("Translate Y", &translationVector.y, -1.0f, 1.0f);
-        ImGui::SliderFloat("Translate Z", &translationVector.z, -1.0f, 1.0f);
+		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
-        ImGui::SliderFloat("Rotate X", &rotationVector.x, 0.0f, 360.0f);
-        ImGui::SliderFloat("Rotate Y", &rotationVector.y, 0.0f, 360.0f);
-        ImGui::SliderFloat("Rotate Z", &rotationVector.z, 0.0f, 360.0f);
+		ImGui::Begin("Cubes");
+		ImGui::SliderFloat("Translate X", &translationVector.x, -1.0f, 1.0f);
+		ImGui::SliderFloat("Translate Y", &translationVector.y, -1.0f, 1.0f);
+		ImGui::SliderFloat("Translate Z", &translationVector.z, -1.0f, 1.0f);
 
-        ImGui::SliderFloat("Scale X", &scaleVector.x, 0.1f, 10.0f);
-        ImGui::SliderFloat("Scale Y", &scaleVector.y, 0.1f, 10.0f);
-        ImGui::SliderFloat("Scale Z", &scaleVector.z, 0.1f, 10.0f);
+		ImGui::SliderFloat("Rotate X", &rotationVector.x, 0.0f, 360.0f);
+		ImGui::SliderFloat("Rotate Y", &rotationVector.y, 0.0f, 360.0f);
+		ImGui::SliderFloat("Rotate Z", &rotationVector.z, 0.0f, 360.0f);
 
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGuiWrapper::GetIO()->Framerate, ImGuiWrapper::GetIO()->Framerate);
-        ImGui::End();
+		ImGui::SliderFloat("Scale X", &scaleVector.x, 0.1f, 10.0f);
+		ImGui::SliderFloat("Scale Y", &scaleVector.y, 0.1f, 10.0f);
+		ImGui::SliderFloat("Scale Z", &scaleVector.z, 0.1f, 10.0f);
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGuiWrapper::GetIO()->Framerate, ImGuiWrapper::GetIO()->Framerate);
+		ImGui::End();
 
         ImGuiWrapper::EndFrameAndRender();
 
         glfwSwapBuffers(window);
+
     }
 
     ImGuiWrapper::Cleanup();
