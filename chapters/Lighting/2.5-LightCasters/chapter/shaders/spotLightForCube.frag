@@ -1,0 +1,71 @@
+#version 460 core
+
+out vec4 FragColor;
+
+struct Material
+{
+	sampler2D diffuse;
+	sampler2D specular;
+	sampler2D emission;
+	float shininess;
+};
+
+uniform Material material;
+
+struct SpotLight
+{
+	vec3 position;
+	vec3 direction;
+
+	vec3 diffuse;
+
+	float intensity;
+
+	// dot product of inner angle
+	float innerDot;
+
+	// dot product of outer angle
+	float outerDot;
+};
+
+uniform SpotLight spotLight;
+
+in vec2 TextureCoordinates;
+
+in vec3 Normal;
+in vec3 FragmentPosition;
+
+void main()
+{
+	const float ambientValue = 0.3f;
+	const vec3 sampledDiffuseValue = vec3(texture(material.diffuse, TextureCoordinates));
+	const vec3 ambient = sampledDiffuseValue * ambientValue;
+
+	vec3 normal = normalize(Normal);
+	vec3 lightDir = normalize(FragmentPosition - spotLight.position);
+
+	const vec3 viewDir = normalize(-FragmentPosition);
+	const vec3 reflectDir = reflect(lightDir, normal);
+	const float cameraBasedSpecularValue = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
+	const vec3 sampledSpecularValue = vec3(texture(material.specular, TextureCoordinates));
+
+	vec3 emission = vec3(0.0f);
+	if (sampledSpecularValue.r == 0.0f)
+	{
+		emission = vec3(texture(material.emission, TextureCoordinates));
+	}
+
+	const float theta = dot(lightDir, normalize(spotLight.direction));
+	const float epsilon = spotLight.innerDot - spotLight.outerDot;
+	const float interpolatedLightIntensityBetweenCones = clamp((theta - spotLight.outerDot) / epsilon, 0.0f, 1.0f);
+
+	// const vec3 cameraPosition = vec3(0.0f);
+	// const vec3 viewDir = normalize(cameraPosition - FragmentPosition);
+	// camera always at origin because we are already in view space
+	const vec3 specular = sampledSpecularValue * cameraBasedSpecularValue * interpolatedLightIntensityBetweenCones;
+	const float diffuseValue = max(dot(normal, -lightDir), 0.0f);
+	const vec3 diffuse = (diffuseValue * sampledDiffuseValue) * spotLight.diffuse * interpolatedLightIntensityBetweenCones * spotLight.intensity;
+
+	const vec3 result = ambient + diffuse + specular + emission;
+	FragColor = vec4(result, 1.0f);
+}

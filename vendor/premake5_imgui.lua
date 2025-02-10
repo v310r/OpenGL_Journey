@@ -21,7 +21,7 @@ project "imgui"
 
     includedirs
     {
-        "%{wks.location}/vendor/imgui_includes",
+        "%{wks.location}/vendor/imgui",
         "%{wks.location}/vendor/glfw/include"
     }
 

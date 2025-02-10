@@ -1,5 +1,5 @@
-workspace "LearnOpenGL"
-    startproject "LearnOpenGL"
+workspace "OpenGL_Journey"
+    startproject "OpenGL_Journey"
     architecture "x86_64"
 
     configurations
@@ -21,10 +21,9 @@ workspace "LearnOpenGL"
 
     defines { "ASSETS_PATH=\"%{wks.location}/assets\"" }
 
-    externalproject "glfw"
-        location "%{wks.location}/vendor/glfw/build/src"
-        kind "StaticLib"
-        language "C++"
+    dofile("vendor/premake5_glfw.lua")
+
+    dofile("vendor/premake5_spdlog.lua")
 
     dofile("vendor/premake5_glm.lua")
 
@@ -36,6 +35,8 @@ workspace "LearnOpenGL"
 
     -----------------------------------------------------------------------------------
 
+    -- GettingStarted
+    -----------------------------------------------------------------------------------
     dofile("chapters/GettingStarted/1.1-HelloWindow/premake5.lua")
 
     dofile("chapters/GettingStarted/1.2-HelloTriangle/premake5.lua")
@@ -48,3 +49,19 @@ workspace "LearnOpenGL"
 
     dofile("chapters/GettingStarted/1.6-CoordinateSystems/premake5.lua")
 
+    dofile("chapters/GettingStarted/1.7-Camera/premake5.lua")
+    -----------------------------------------------------------------------------------
+
+    -- Lighting
+    -----------------------------------------------------------------------------------
+    dofile("chapters/Lighting/2.1-Colors/premake5.lua")
+
+    dofile("chapters/Lighting/2.2-BasicLighting/premake5.lua")
+
+    dofile("chapters/Lighting/2.3-Materials/premake5.lua")
+
+    dofile("chapters/Lighting/2.4-LightingMaps/premake5.lua")
+
+    dofile("chapters/Lighting/2.5-LightCasters/premake5.lua")
+
+    dofile("chapters/Lighting/2.6-MultipleLights/premake5.lua")

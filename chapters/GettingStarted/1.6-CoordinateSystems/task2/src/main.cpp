@@ -46,7 +46,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "LearnOpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "OpenGL_Journey", nullptr, nullptr);
 	if (!window)
 	{
 		std::cerr << "Failed to create GLFW window" << std::endl;
@@ -228,7 +228,7 @@ int main()
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::translate(view, glm::vec3(3.0f, 0.0f, -3.0f));
 
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), g_WindowWidth / (float)g_WindowWidth, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), g_WindowWidth / (float)g_WindowHeight, 0.1f, 100.0f);
 
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),

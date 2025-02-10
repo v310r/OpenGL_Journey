@@ -22,7 +22,6 @@ void OnWindowSizeChanged(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glfwSwapBuffers(window);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 int main()
@@ -33,7 +32,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "LearnOpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "OpenGL_Journey", nullptr, nullptr);
 	if (!window)
 	{
 		std::cerr << "Failed to create GLFW window" << std::endl;
@@ -57,14 +56,18 @@ int main()
 	// notice how I'm playing with colors and buffer changes
 	// Also pay attention to the OnWindowSizeChanged function
 	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glfwSwapBuffers(window);
-	glClear(GL_COLOR_BUFFER_BIT);
+
+	// actually these are unnecessary
+	//glClear(GL_COLOR_BUFFER_BIT);
+	//glfwSwapBuffers(window);
+	//glClear(GL_COLOR_BUFFER_BIT);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
 		ProcessInput(window);
+
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		glfwSwapBuffers(window);
 	}

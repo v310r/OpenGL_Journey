@@ -3,7 +3,7 @@ project "GLAD"
     kind "StaticLib"
     language "C"
     cdialect "C17"
-    staticruntime "Off"
+    staticruntime "On"
 
     targetdir ("%{prj.location}/build/bin/" .. outputdir)
     objdir ("%{prj.location}/build/intermediate/" .. outputdir)
