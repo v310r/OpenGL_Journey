@@ -21,6 +21,10 @@ workspace "OpenGL_Journey"
 
     defines { "ASSETS_PATH=\"%{wks.location}/assets\"" }
 
+
+    -- Fake stub, Actually it is CMake that builds everything, this premake-made project is used just for checking source code
+    dofile("vendor/premake5_assimp.lua")
+
     dofile("vendor/premake5_glfw.lua")
 
     dofile("vendor/premake5_spdlog.lua")
@@ -65,3 +69,12 @@ workspace "OpenGL_Journey"
     dofile("chapters/Lighting/2.5-LightCasters/premake5.lua")
 
     dofile("chapters/Lighting/2.6-MultipleLights/premake5.lua")
+    -----------------------------------------------------------------------------------
+
+    -- ModelLoading
+    -----------------------------------------------------------------------------------
+    dofile("chapters/ModelLoading/3.1-Assimp/premake5.lua")
+
+    dofile("chapters/ModelLoading/3.2-Mesh/premake5.lua")
+
+    dofile("chapters/ModelLoading/3.3-Model/premake5.lua")

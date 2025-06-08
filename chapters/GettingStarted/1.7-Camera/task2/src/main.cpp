@@ -30,117 +30,116 @@ bool g_bFirstMouseInput = true;
 
 FlyCamera g_Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-
 int main()
 {
-    glfwInit();
+	glfwInit();
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "OpenGL_Journey", nullptr, nullptr);
-    if (!window)
-    {
-        std::cerr << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+	GLFWwindow* window = glfwCreateWindow(g_WindowWidth, g_WindowHeight, "OpenGL_Journey", nullptr, nullptr);
+	if (!window)
+	{
+		std::cerr << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
 
-    glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cerr << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
 
-    //glViewport(0, 0, g_WindowWidth, g_WindowHeight);
+	//glViewport(0, 0, g_WindowWidth, g_WindowHeight);
 
-    glfwSetWindowSizeCallback(window, Callbacks::OnWindowSizeChanged);
-    glfwSetCursorPosCallback(window, Callbacks::OnMouseMoved);
-    glfwSetScrollCallback(window, Callbacks::OnMouseScrolled);
-    glfwSetMouseButtonCallback(window, Callbacks::OnMouseButtonAction);
+	glfwSetWindowSizeCallback(window, Callbacks::OnWindowSizeChanged);
+	glfwSetCursorPosCallback(window, Callbacks::OnMouseMoved);
+	glfwSetScrollCallback(window, Callbacks::OnMouseScrolled);
+	glfwSetMouseButtonCallback(window, Callbacks::OnMouseButtonAction);
 
 #ifdef _DEBUG
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(Debug::OnOpenGLdebugCallback, nullptr);
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(Debug::OnOpenGLdebugCallback, nullptr);
 #endif
 
-    ImGuiWrapper::Init(window, "#version 460 core");
+	ImGuiWrapper::Init(window, "#version 460 core");
 
-    unsigned int textures[2];
-    glGenTextures(2, textures);
+	unsigned int textures[2];
+	glGenTextures(2, textures);
 
-    for (size_t i = 0; i < 2; ++i)
-    {
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
+	for (size_t i = 0; i < 2; ++i)
+	{
+		glBindTexture(GL_TEXTURE_2D, textures[i]);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    }
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
 
-    stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(true);
 
-    int width, height, NumColorChannels;
-    std::string woodenContainerPath = (std::string(ASSETS_PATH) + "/wooden_container.jpg");
-    unsigned char* data = stbi_load(woodenContainerPath.data(), &width, &height, &NumColorChannels, 0);
+	int width, height, NumColorChannels;
+	std::string woodenContainerPath = (std::string(ASSETS_PATH) + "/wooden_container.jpg");
+	unsigned char* data = stbi_load(woodenContainerPath.data(), &width, &height, &NumColorChannels, 0);
 
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cerr << "Failed to load texture" << std::endl;
-    }
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cerr << "Failed to load texture" << std::endl;
+	}
 
-    stbi_image_free(data);
+	stbi_image_free(data);
 
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
 
 
-    std::string awesomeFacePath = (std::string(ASSETS_PATH) + "/awesomeface.png");
-    data = stbi_load(awesomeFacePath.data(), &width, &height, &NumColorChannels, 0);
+	std::string awesomeFacePath = (std::string(ASSETS_PATH) + "/awesomeface.png");
+	data = stbi_load(awesomeFacePath.data(), &width, &height, &NumColorChannels, 0);
 
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cerr << "Failed to load texture" << std::endl;
-    }
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cerr << "Failed to load texture" << std::endl;
+	}
 
-    stbi_image_free(data);
+	stbi_image_free(data);
 
-    std::shared_ptr<VertexArray> VAO = std::make_shared<VertexArray>();
+	std::shared_ptr<VertexArray> VAO = std::make_shared<VertexArray>();
 
-    std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(g_TexturedCubeVertices, g_TexturedCubeVerticesSizeInBytes / sizeof(g_TexturedCubeVertices[0]));
-    vb->SetLayout(
-    {
-        {ShaderUtility::EShaderDataType::Float3, "aPos"},
-        {ShaderUtility::EShaderDataType::Float2, "aTexCoord"}
-    });
+	std::shared_ptr<VertexBuffer> vb = std::make_shared<VertexBuffer>(g_TexturedCubeVertices, g_TexturedCubeVerticesSizeInBytes / sizeof(g_TexturedCubeVertices[0]));
+	vb->SetLayout(
+		{
+			{ShaderUtility::EShaderDataType::Float3, "aPos"},
+			{ShaderUtility::EShaderDataType::Float2, "aTexCoord"}
+		});
 
-    VAO->AddVertexBuffer(vb);
+	VAO->AddVertexBuffer(vb);
 
-    Shader defaultShader("shaders/shader.vert", "shaders/shader.frag");
+	Shader defaultShader("shaders/shader.vert", "shaders/shader.frag");
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
 
-    defaultShader.Bind();
-    defaultShader.SetInt("texture1", 0);
-    defaultShader.SetInt("texture2", 1);
+	defaultShader.Bind();
+	defaultShader.SetInt("texture1", 0);
+	defaultShader.SetInt("texture2", 1);
 
 	glm::vec3 cubePositions[] =
 	{
@@ -156,46 +155,47 @@ int main()
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-    glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
+	glClearColor(0.3f, 0.6f, 0.6f, 1.0f);
 
-    glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
-    glm::vec3 translationVector = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 rotationVector = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 scaleVector = glm::vec3(1.0f, 1.0f, 1.0f);
-    while (!glfwWindowShouldClose(window))
-    {
-        float currentFrame = static_cast<float>(glfwGetTime());
-        g_DeltaTime = currentFrame - g_LastFrameTime;
-        g_LastFrameTime = currentFrame;
+	glm::vec3 translationVector = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 rotationVector = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 scaleVector = glm::vec3(1.0f, 1.0f, 1.0f);
+	while (!glfwWindowShouldClose(window))
+	{
+		float currentFrame = static_cast<float>(glfwGetTime());
+		g_DeltaTime = currentFrame - g_LastFrameTime;
+		g_LastFrameTime = currentFrame;
 
 
-        glfwPollEvents();
-        Input::Process(window);
+		glfwPollEvents();
 
-        glm::mat4 view = glm::mat4(1.0f);
-        view = g_Camera.GetViewMatrix();
-        defaultShader.SetMat4("view", view);
-        
-        glm::mat4 projection = glm::perspective(glm::radians(g_Camera.GetZoom()), g_WindowWidth / (float)g_WindowHeight, 0.1f, 100.0f);
-        defaultShader.SetMat4("projection", projection);
+		Input::Process(window);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glm::mat4 view = glm::mat4(1.0f);
+		view = g_Camera.GetViewMatrix();
+		defaultShader.SetMat4("view", view);
 
-        for (unsigned int i = 0; i < 10; i++)
-        {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, translationVector);
-            model = glm::translate(model, cubePositions[i]);
-            model = glm::rotate(model, glm::radians(rotationVector.x), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(rotationVector.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(rotationVector.z), glm::vec3(0.0f, 0.0f, 1.0f));
-            model = glm::scale(model, scaleVector);
-            defaultShader.SetMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+		glm::mat4 projection = glm::perspective(glm::radians(g_Camera.GetZoom()), g_WindowWidth / (float)g_WindowHeight, 0.1f, 100.0f);
+		defaultShader.SetMat4("projection", projection);
 
-        ImGuiWrapper::NewFrame();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, translationVector);
+			model = glm::translate(model, cubePositions[i]);
+			model = glm::rotate(model, glm::radians(rotationVector.x), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(rotationVector.y), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(rotationVector.z), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, scaleVector);
+			defaultShader.SetMat4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
+		ImGuiWrapper::NewFrame();
 
 		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
@@ -215,16 +215,16 @@ int main()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGuiWrapper::GetIO()->Framerate, ImGuiWrapper::GetIO()->Framerate);
 		ImGui::End();
 
-        ImGuiWrapper::EndFrameAndRender();
+		ImGuiWrapper::EndFrameAndRender();
 
-        glfwSwapBuffers(window);
+		glfwSwapBuffers(window);
 
-    }
+	}
 
-    ImGuiWrapper::Cleanup();
+	ImGuiWrapper::Cleanup();
 
-    glfwDestroyWindow(window);
-    glfwTerminate();
+	glfwDestroyWindow(window);
+	glfwTerminate();
 
-    return 0;
+	return 0;
 }

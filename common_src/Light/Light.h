@@ -36,7 +36,7 @@ protected:
 	// usually represents the color of light
 	glm::vec3 m_Diffuse = glm::vec3(1.0f);
 
-	float m_Intensity = 1.0f;
+	float m_Intensity = 0.5f;
 };
 
 class DirectionalLight : public Light

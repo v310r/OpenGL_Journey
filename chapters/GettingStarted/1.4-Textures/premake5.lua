@@ -7,8 +7,8 @@ group "GettingStarted"
 
             files
             {
-                "%{wks.location}/common_src/Shader1/Shader.h",
-                "%{wks.location}/common_src/Shader1/Shader.cpp"
+                "%{wks.location}/common_src/**.h",
+                "%{wks.location}/common_src/**.cpp"
             }
             
             setupCommonWindowsSettings()
@@ -19,8 +19,8 @@ group "GettingStarted"
 
             files
             {
-                "%{wks.location}/common_src/Shader1/Shader.h",
-                "%{wks.location}/common_src/Shader1/Shader.cpp"
+                "%{wks.location}/common_src/**.h",
+                "%{wks.location}/common_src/**.cpp"
             }
             
             setupCommonWindowsSettings()
@@ -31,8 +31,8 @@ group "GettingStarted"
 
             files
             {
-                "%{wks.location}/common_src/Shader1/Shader.h",
-                "%{wks.location}/common_src/Shader1/Shader.cpp"
+                "%{wks.location}/common_src/**.h",
+                "%{wks.location}/common_src/**.cpp"
             }
 
             setupCommonWindowsSettings()
@@ -43,8 +43,8 @@ group "GettingStarted"
 
             files
             {
-                "%{wks.location}/common_src/Shader1/Shader.h",
-                "%{wks.location}/common_src/Shader1/Shader.cpp"
+                "%{wks.location}/common_src/**.h",
+                "%{wks.location}/common_src/**.cpp"
             }
 
             setupCommonWindowsSettings()
@@ -55,8 +55,8 @@ group "GettingStarted"
 
             files
             {
-                "%{wks.location}/common_src/Shader1/Shader.h",
-                "%{wks.location}/common_src/Shader1/Shader.cpp"
+                "%{wks.location}/common_src/**.h",
+                "%{wks.location}/common_src/**.cpp"
             }
 
             setupCommonWindowsSettings()

@@ -1,6 +1,12 @@
 #include "Shader.h"
 
 
+#include "Light/Light.h"
+#include "Core/Core.h"
+#include "Renderer/Renderer.h"
+#include "Utility/UtilityFunctions.h"
+
+
 Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
 {
 	std::string vertexShaderCode;
@@ -108,14 +114,48 @@ void Shader::SetFloat4(std::string_view name, glm::vec4 value) const
 	glUniform4f(location, value.x, value.y, value.z, value.w);
 }
 
-void Shader::SetMat4(std::string_view name, glm::mat4& matrix, int count, bool bTranspose) const
+void Shader::SetMat4(std::string_view name, const glm::mat4& matrix, int count, bool bTranspose) const
 {
 	GLint location = glGetUniformLocation(m_ID, name.data());
 	glUniformMatrix4fv(location, count, bTranspose, glm::value_ptr(matrix));
 }
 
-void Shader::SetMat3(std::string_view name, glm::mat3 matrix, int count /*= 1*/, bool bTranspose /*= false*/) const
+void Shader::SetMat3(std::string_view name, const glm::mat3& matrix, int count /*= 1*/, bool bTranspose /*= false*/) const
 {
 	GLint location = glGetUniformLocation(m_ID, name.data());
 	glUniformMatrix3fv(location, count, bTranspose, glm::value_ptr(matrix));
+}
+
+void Shader::SetPointLight(const PointLight& inPointLight, const std::string& inName, const STransform& inTransform)
+{
+	SetFloat3(inName + ".position", Renderer::GetView() * glm::vec4(inTransform.Translation, 1.0f));
+	SetFloat3(inName + ".diffuse", inPointLight.GetColor());
+	SetFloat(inName + ".intensity", inPointLight.GetIntensity());
+	SetFloat(inName + ".constant", inPointLight.GetConstant());
+	SetFloat(inName + ".linear", inPointLight.GetLinear());
+	SetFloat(inName + ".quadratic", inPointLight.GetQuadratic());
+}
+
+void Shader::SetDirectionalLight(const DirectionalLight& inDirectionalLight, const std::string& inName, const STransform& inTransform)
+{
+	const glm::mat4 directionalLightTransformMatrix = UtilityFunctions::CalculateTransformMatrix(inDirectionalLight.GetTransform());
+	const glm::vec3 directionalLightDirection = UtilityFunctions::GetForwardDirection(directionalLightTransformMatrix);
+	SetFloat3(inName + ".direction", glm::mat3(Renderer::GetView()) * directionalLightDirection);
+
+	SetFloat3(inName + ".ambient", inDirectionalLight.GetAmbient() * (glm::max(0.0f, inDirectionalLight.GetIntensity())));
+	SetFloat3(inName + ".diffuse", inDirectionalLight.GetColor());
+	SetFloat(inName + ".intensity", inDirectionalLight.GetIntensity());
+}
+
+void Shader::SetSpotLight(const SpotLight& inSpotLight, const std::string& inName, const STransform& inTransform)
+{
+	SetFloat3("spotlight.position", Renderer::GetView() * glm::vec4(inTransform.Translation, 1.0f));
+	SetFloat3("spotlight.direction", glm::mat3(Renderer::GetView()) * inSpotLight.GetDirection());
+
+	SetFloat3("spotlight.diffuse", inSpotLight.GetColor());
+	SetFloat("spotlight.intensity", inSpotLight.GetIntensity());
+
+	// dot product of inner angle
+	SetFloat("spotlight.innerDot", glm::cos(glm::radians(inSpotLight.GetInnerAngle())));
+	SetFloat("spotlight.outerDot", glm::cos(glm::radians(inSpotLight.GetOuterAngle())));
 }

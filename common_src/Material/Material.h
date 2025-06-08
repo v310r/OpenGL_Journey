@@ -5,12 +5,6 @@
 #include "glm.hpp"
 
 
-std::string_view GetAmbientName();
-std::string_view GetDiffuseName();
-std::string_view GetSpecularName();
-std::string_view GetEmissionName();
-std::string_view GetShininessName();
-
 class Shader;
 class Texture;
 

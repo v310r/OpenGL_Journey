@@ -10,6 +10,13 @@
 #include "glm.hpp"
 #include "gtc/type_ptr.hpp"
 
+
+class PointLight;
+class DirectionalLight;
+class SpotLight;
+
+struct STransform;
+
 class Shader
 {
 public:
@@ -29,12 +36,16 @@ public:
 	void SetFloat3(std::string_view name, glm::vec3 value) const;
 	void SetFloat4(std::string_view name, glm::vec4 value) const;
 
-	void SetMat4(std::string_view name, glm::mat4& matrix, int count = 1, bool bTranspose = false) const;
+	void SetMat4(std::string_view name, const glm::mat4& matrix, int count = 1, bool bTranspose = false) const;
 
 	// better make mat3 as reference, but right now It's too tedious to do for me ))
 	// I would need to cache model matrix as mat3 somewhere
-	void SetMat3(std::string_view name, glm::mat3 matrix, int count = 1, bool bTranspose = false) const;
+	void SetMat3(std::string_view name, const glm::mat3& matrix, int count = 1, bool bTranspose = false) const;
 
+
+	void SetPointLight(const PointLight& inPointLight, const std::string& inName, const STransform& inTransform);
+	void SetDirectionalLight(const DirectionalLight& inDirectionalLight, const std::string& inName, const STransform& inTransform);
+	void SetSpotLight(const SpotLight& inSpotLight, const std::string& inName, const STransform& inTransform);
 
 private:
 	unsigned int m_ID;

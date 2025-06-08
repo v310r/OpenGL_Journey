@@ -35,13 +35,6 @@ bool g_bFirstMouseInput = true;
 
 FlyCamera g_Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-struct STransform
-{
-	glm::vec3 Translation = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
-};
-
 struct SLightCube
 {
 	STransform Transform;

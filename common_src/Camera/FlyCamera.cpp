@@ -26,7 +26,7 @@ FlyCamera::FlyCamera(float posX, float posY, float posZ, float upX, float upY, f
     UpdateCameraVectors();
 }
 
-glm::mat4 FlyCamera::GetViewMatrix()
+glm::mat4 FlyCamera::GetViewMatrix() const
 {
     return glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 }

@@ -13,9 +13,22 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include "Camera/FlyCamera.h"
+
 int g_WindowWidth = 800;
 int g_WindowHeight = 600;
 
+
+//fixes linking and compile errors)
+float g_DeltaTime = 0.0f;
+float g_LastFrameTime = 0.0f;
+
+float g_MouseLastX = 400.0f;
+float g_MouseLastY = 300.0f;
+
+bool g_bFirstMouseInput = true;
+
+FlyCamera g_Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 void ProcessInput(GLFWwindow* window)
 {

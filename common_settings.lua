@@ -32,6 +32,10 @@ function setupCommonWindowsSettings()
         "%{wks.location}/vendor/glm/glm",
         "%{wks.location}/vendor/imgui",
         "%{wks.location}/vendor/imgui/backends",
+        "%{wks.location}/vendor/assimp/include",
+
+        -- kinda limited to x64, but who cares)
+        "%{wks.location}/vendor/assimp/build/x64/include"
     }
 
     libdirs
@@ -60,6 +64,14 @@ function setupCommonWindowsSettings()
     
         links
         {
+            "winspool.lib",
+            "shell32.lib",
+            "ole32.lib",
+            "oleaut32.lib",
+            "uuid.lib",
+            "comdlg32.lib",
+            "advapi32.lib",
+
             "opengl32.lib",
             "kernel32.lib",
             "user32.lib",
@@ -72,11 +84,35 @@ function setupCommonWindowsSettings()
             {
                 "_DEBUG"
             }
+
+            libdirs
+            {
+                "%{wks.location}/vendor/assimp/build/x64/lib/Debug/",
+                "%{wks.location}/vendor/assimp/build/x64/contrib/zlib/Debug"
+            }
+
+            links
+            {
+                "assimp-vc143-mtd",
+                "zlibstaticd"
+            }
         
         filter "configurations:Release"
             optimize "On"
             defines
             {
                 "NDEBUG"
+            }
+
+            libdirs
+            {
+                "%{wks.location}/vendor/assimp/build/x64/lib/Release/",
+                "%{wks.location}/vendor/assimp/build/x64/contrib/zlib/Release"
+            }
+
+            links
+            {
+                "assimp-vc143-mt",
+                "zlibstatic"
             }
 end

@@ -10,27 +10,27 @@ static std::string_view s_SpecularName = "material.specular";
 static std::string_view s_EmissionName = "material.emission";
 static std::string_view s_ShininessName = "material.shininess";
 
-std::string_view GetAmbientName()
+static std::string_view GetAmbientName()
 {
 	return s_AmbientName;
 }
 
-std::string_view GetDiffuseName()
+static std::string_view GetDiffuseName()
 {
 	return s_DiffuseName;
 }
 
-std::string_view GetSpecularName()
+static std::string_view GetSpecularName()
 {
 	return s_SpecularName;
 }
 
-std::string_view GetEmissionName()
+static std::string_view GetEmissionName()
 {
 	return s_EmissionName;
 }
 
-std::string_view GetShininessName()
+static std::string_view GetShininessName()
 {
 	return s_ShininessName;
 }

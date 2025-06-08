@@ -2,11 +2,13 @@
 
 #include <string>
 
+#include "AssetManager/AssetManager.h"
+
 
 class Texture
 {
 public:
-	Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTransparencyChannel = true);
+	Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTransparencyChannel = true, const std::string& textureName = "Unknown");
 
 	~Texture();
 
@@ -22,10 +24,10 @@ public:
 
 	int32_t GetTextureUnit() const;
 
+	SAssetHandle GetTextureHandle() const;
+
 protected:
 	unsigned int m_Id;
-
-	unsigned char* m_Data = nullptr;
 
 	int m_Width = 0, m_Height = 0;
 
@@ -34,4 +36,6 @@ protected:
 	int32_t m_TextureUnit = -1;
 
 	bool m_bHasTransparencyChannel = true;
+
+	SAssetHandle m_TextureHandle;
 };

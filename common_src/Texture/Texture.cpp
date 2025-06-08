@@ -2,16 +2,24 @@
 
 #include "glad/glad.h"
 
-#include "stb_image.h"
-
 #include "Utility/Log.h"
 
 
-Texture::Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTransparencyChannel /* = true*/)
+Texture::Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTransparencyChannel /* = true*/, const std::string& textureName /* = "Unknown"*/)
 {
+	std::pair<SAssetHandle, SRawTextureData> outTextureData;
+	if (AssetManager::LoadTexture(pathToFile.data(), outTextureData) == false)
+	{
+		LOG_INFO("Failed to load texture; Path: {0}", pathToFile);
+		return;
+	}
+
+	const auto& [textureAssetHandle, rawTextureData] = outTextureData;
+
 	m_bHasTransparencyChannel = bHasTransparencyChannel;
 
-	glGenTextures(1, &m_Id);
+	m_TextureHandle = textureAssetHandle;
+	m_Id = rawTextureData.GPUid;
 
 	glBindTexture(GL_TEXTURE_2D, m_Id);
 
@@ -20,33 +28,48 @@ Texture::Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTr
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	m_Data = stbi_load(pathToFile.data(), &m_Width, &m_Height, &m_NumColorChannels, 0);
-	if (m_Data)
+	m_Width = rawTextureData.Width;
+	m_Height = rawTextureData.Height;
+	m_NumColorChannels = rawTextureData.Channels;
+
+	if (AssetManager::CountUsage(textureAssetHandle) == 0)
 	{
 		if (m_bHasTransparencyChannel)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_Data);
+			if (m_NumColorChannels == 3)
+			{
+				// If the texture has an alpha channel, we use GL_RGBA
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, rawTextureData.Data);
+
+			}
+			else if (m_NumColorChannels == 4)
+			{
+				// If the texture has an alpha channel, we use GL_RGBA
+				// This is the case for PNGs and other formats that support transparency
+				// GL_RGBA is used for textures with 4 channels (R, G, B, A)
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rawTextureData.Data);
+			}
+		}
+		else if (m_NumColorChannels == 1)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RED, GL_UNSIGNED_BYTE, rawTextureData.Data);
 		}
 		else
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_Data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, rawTextureData.Data);
 		}
 
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	else
-	{
-		LOG_INFO("Failed to load texture");
-		return;
-	}
+
+	AssetManager::UpdateUsageCounter(textureAssetHandle);
 
 	m_TextureUnit = textureUnit;
 }
 
 Texture::~Texture()
 {
-	stbi_image_free(m_Data);
-	glDeleteTextures(1, &m_Id);
+	AssetManager::TryDeallocate(m_TextureHandle);
 }
 
 void Texture::Bind()
@@ -78,4 +101,9 @@ void Texture::BindAndActivateUnit()
 int32_t Texture::GetTextureUnit() const
 {
 	return m_TextureUnit;
+}
+
+SAssetHandle Texture::GetTextureHandle() const
+{
+	return m_TextureHandle;
 }
