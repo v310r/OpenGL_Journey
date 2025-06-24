@@ -16,7 +16,11 @@ Texture::Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTr
 
 	const auto& [textureAssetHandle, rawTextureData] = outTextureData;
 
-	m_bHasTransparencyChannel = bHasTransparencyChannel;
+	m_bHasTransparencyChannel = true;
+	if (pathToFile.find(".png") == std::string::npos)
+	{
+		m_bHasTransparencyChannel = false;
+	}
 
 	m_TextureHandle = textureAssetHandle;
 	m_Id = rawTextureData.GPUid;

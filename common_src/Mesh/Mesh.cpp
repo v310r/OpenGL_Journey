@@ -56,13 +56,7 @@ Mesh::Mesh(const std::string& pathToMesh, bool bLoadAsAssimpModel /*= false*/)
 		// we only support forward rendering for now and each object is rendered with a single material
 		// TextureUnit is bound and overriden for each draw call
 
-		bool bHasTransparencyChannel = true;
-		if (meshTexturePath.find(".png") == std::string::npos)
-		{
-			bHasTransparencyChannel = false;
-		}
-
-		std::shared_ptr<Texture> texture = std::make_shared<Texture>(meshTexturePath, textureUnit, bHasTransparencyChannel);
+		std::shared_ptr<Texture> texture = std::make_shared<Texture>(meshTexturePath, textureUnit);
 		++textureUnit;
 
 		const ETextureType textureType = AssetManager::GetCachedTextureType(textureAssetHandle);

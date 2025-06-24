@@ -8,6 +8,7 @@
 class Texture
 {
 public:
+	// bHasTransparencyChannel is useless but left here for compatibility
 	Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTransparencyChannel = true, const std::string& textureName = "Unknown");
 
 	~Texture();

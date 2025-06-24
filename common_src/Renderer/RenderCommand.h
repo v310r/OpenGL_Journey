@@ -18,4 +18,6 @@ public:
 	static void DrawUnindexed(const std::shared_ptr<VertexArray>& vao);
 
 	static void ClearColor();
+
+	static void Clear();
 };

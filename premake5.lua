@@ -78,3 +78,12 @@ workspace "OpenGL_Journey"
     dofile("chapters/ModelLoading/3.2-Mesh/premake5.lua")
 
     dofile("chapters/ModelLoading/3.3-Model/premake5.lua")
+    -----------------------------------------------------------------------------------
+
+    -- AdvancedOpenGL
+    -----------------------------------------------------------------------------------
+    dofile("chapters/AdvancedOpenGL/4.1-DepthTesting/premake5.lua")
+
+    dofile("chapters/AdvancedOpenGL/4.2-StencilTesting/premake5.lua")
+
+    dofile("chapters/AdvancedOpenGL/4.3-Blending/premake5.lua")
