@@ -4,7 +4,7 @@ This repository is made only for learning purposes. Chapters were taken from htt
 
 This whole project is an upgraded version of the source. Auxiliary classes were created in order to ease the usage of OpenGL API and understanding the whole concept.
 
-If you'll find this useful, than I'd be glad.
+If you'll find this useful, then I'd be glad.
 
 Chapters are located in folder "chapters" ;-).
 
