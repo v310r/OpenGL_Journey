@@ -97,16 +97,18 @@ float g_TexturedCubeVertices[] =
 };
 
 
+
+// this one is using CCW order for vertices
 float g_TexturedCubeVerticesWithNormals[] =
 {
 	// positions			// normal coords	// texture coords
 
 	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f, -1.0f,	0.0f, 0.0f,
-	0.5f, -0.5f, -0.5f,		0.0f, 0.0f, -1.0f,	1.0f, 0.0f,
 	0.5f, 0.5f, -0.5f,		0.0f, 0.0f, -1.0f,	1.0f, 1.0f,		// Back face
+	0.5f, -0.5f, -0.5f,		0.0f, 0.0f, -1.0f,	1.0f, 0.0f,
 	0.5f, 0.5f, -0.5f,		0.0f, 0.0f, -1.0f,	1.0f, 1.0f,
-	-0.5f, 0.5f, -0.5f,		0.0f, 0.0f, -1.0f,	0.0f, 1.0f,
 	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f, -1.0f,	0.0f, 0.0f,
+	-0.5f, 0.5f, -0.5f,		0.0f, 0.0f, -1.0f,	0.0f, 1.0f,
 
 	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f,
 	0.5f, -0.5f, 0.5f,		0.0f, 0.0f, 1.0f,	1.0f, 0.0f,
@@ -123,11 +125,11 @@ float g_TexturedCubeVerticesWithNormals[] =
 	-0.5f, 0.5f, 0.5f,		-1.0f, 0.0f, 0.0f,	1.0f, 0.0f,
 
 	0.5f, 0.5f, 0.5f,		1.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-	0.5f, 0.5f, -0.5f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 	0.5f, -0.5f, -0.5f,		1.0f, 0.0f, 0.0f,	0.0f, 1.0f,		// Right face
+	0.5f, 0.5f, -0.5f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 	0.5f, -0.5f, -0.5f,		1.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-	0.5f, -0.5f, 0.5f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 	0.5f, 0.5f, 0.5f,		1.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+	0.5f, -0.5f, 0.5f,		1.0f, 0.0f, 0.0f,	0.0f, 0.0f,
 
 	-0.5f, -0.5f, -0.5f,	0.0f, -1.0f, 0.0f,	0.0f, 1.0f,
 	0.5f, -0.5f, -0.5f,		0.0f, -1.0f, 0.0f,	1.0f, 1.0f,
@@ -137,11 +139,11 @@ float g_TexturedCubeVerticesWithNormals[] =
 	-0.5f, -0.5f, -0.5f,	0.0f, -1.0f, 0.0f,	0.0f, 1.0f,
 
 	-0.5f,  0.5f, -0.5f,	0.0f, 1.0f, 0.0f,	0.0f, 1.0f,
-	0.5f, 0.5f, -0.5f,		0.0f, 1.0f, 0.0f,	1.0f, 1.0f,
 	0.5f, 0.5f, 0.5f,		0.0f, 1.0f, 0.0f,	1.0f, 0.0f,		// Top face
+	0.5f, 0.5f, -0.5f,		0.0f, 1.0f, 0.0f,	1.0f, 1.0f,
 	0.5f, 0.5f, 0.5f,		0.0f, 1.0f, 0.0f,	1.0f, 0.0f,
-	-0.5f, 0.5f, 0.5f,		0.0f, 1.0f, 0.0f,	0.0f, 0.0f,
-	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f
+	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f, 0.0f,	0.0f, 1.0f,
+	-0.5f, 0.5f, 0.5f,		0.0f, 1.0f, 0.0f,	0.0f, 0.0f
 };
 
 //
@@ -241,6 +243,15 @@ extern float g_TexturedQuadVertices[] =
 	-0.5f,  0.5f, 0.0f,		0.0f, 1.0f  // Top Left
 };
 
+extern float g_ScreenQuadTexturedVertices[] =
+{
+	// Positions			// TexCoords
+	-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,  // Bottom Left
+	 1.0f, -1.0f, 0.0f,		1.0f, 0.0f,   // Bottom Right
+	 1.0f,  1.0f, 0.0f,		1.0f, 1.0f,  // Top Right
+	-1.0f,  1.0f, 0.0f,		0.0f, 1.0f   // Top Left
+};
+
 extern float g_TexturedQuadVerticesWithNormals[] = 
 {
 	// Positions			// Normals			// TexCoords
@@ -260,6 +271,7 @@ unsigned int g_QuadIndices[] =
 size_t g_QuadVerticesSizeInBytes = sizeof(g_QuadVertices);
 size_t g_QuadVerticesWithNormalsSizeInBytes = sizeof(g_QuadVerticesWithNormals);
 size_t g_TexturedQuadVerticesSizeInBytes = sizeof(g_TexturedQuadVertices);
+size_t g_ScreenQuadTexturedVerticesSizeInBytes = sizeof(g_ScreenQuadTexturedVertices);
 size_t g_TexturedQuadVerticesWithNormalsSizeInBytes = sizeof(g_TexturedQuadVerticesWithNormals);
 
 size_t g_QuadIndicesSizeInBytes = sizeof(g_QuadIndices);

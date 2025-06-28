@@ -27,12 +27,14 @@ extern size_t g_CubeIndicesSizeInBytes;
 extern float g_QuadVertices[];
 extern float g_QuadVerticesWithNormals[];
 extern float g_TexturedQuadVertices[];
+extern float g_ScreenQuadTexturedVertices[];
 extern float g_TexturedQuadVerticesWithNormals[];
 extern unsigned int g_QuadIndices[];
 
 extern size_t g_QuadVerticesSizeInBytes;
 extern size_t g_QuadVerticesWithNormalsSizeInBytes;
 extern size_t g_TexturedQuadVerticesSizeInBytes;
+extern size_t g_ScreenQuadTexturedVerticesSizeInBytes;
 extern size_t g_TexturedQuadVerticesWithNormalsSizeInBytes;
 
 extern size_t g_QuadIndicesSizeInBytes;

@@ -48,6 +48,17 @@ public:
     float GetZoom() const { return m_Zoom; }
     void SetZoom(float value) { m_Zoom = value; }
 
+	float GetYaw() const
+	{
+		return m_Yaw;
+	}
+
+	void SetYaw(float value)
+	{
+		m_Yaw = value;
+		UpdateCameraVectors();
+	}
+
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void UpdateCameraVectors();

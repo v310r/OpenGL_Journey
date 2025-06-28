@@ -87,3 +87,9 @@ workspace "OpenGL_Journey"
     dofile("chapters/AdvancedOpenGL/4.2-StencilTesting/premake5.lua")
 
     dofile("chapters/AdvancedOpenGL/4.3-Blending/premake5.lua")
+
+    dofile("chapters/AdvancedOpenGL/4.4-FaceCulling/premake5.lua")
+
+    dofile("chapters/AdvancedOpenGL/4.5-Framebuffers/premake5.lua")
+
+    dofile("chapters/AdvancedOpenGL/4.6-Cubemaps/premake5.lua")
