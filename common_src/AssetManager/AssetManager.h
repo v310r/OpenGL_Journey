@@ -116,7 +116,7 @@ public:
 class AssetManager
 {
 public:
-	static AssetManager* Get();
+	static AssetManager& Get();
 
 	static void Destroy();
 

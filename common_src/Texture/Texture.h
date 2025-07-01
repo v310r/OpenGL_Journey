@@ -5,13 +5,28 @@
 #include "AssetManager/AssetManager.h"
 
 
+struct STextureConstructionSettings
+{
+	std::string TextureName = "Unknown";
+
+	int32_t TextureUnit = -1;
+
+	int32_t TextureTarget = 0; // e.g. GL_TEXTURE_2D or GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, etc. for Y and Z
+
+	bool bUsedForCubemap = false;
+};
+
 class Texture
 {
 public:
 	// bHasTransparencyChannel is useless but left here for compatibility
 	Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTransparencyChannel = true, const std::string& textureName = "Unknown");
 
+	Texture(const std::string& pathToFile, const STextureConstructionSettings& inSettings);
+
 	~Texture();
+
+	bool IsValid() const;
 
 	void Bind();
 

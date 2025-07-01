@@ -43,9 +43,9 @@ uint64_t HashString(const std::string& input)
 
 static uint64_t g_AssetAllocationCounter = 0;
 
-AssetManager* AssetManager::Get()
+AssetManager& AssetManager::Get()
 {
-	return s_AssetManager;
+	return *s_AssetManager;
 }
 
 void AssetManager::Destroy()

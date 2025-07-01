@@ -146,6 +146,101 @@ float g_TexturedCubeVerticesWithNormals[] =
 	-0.5f, 0.5f, 0.5f,		0.0f, 1.0f, 0.0f,	0.0f, 0.0f
 };
 
+float g_CubeVertices[] =
+{
+	// positions			// normal coords	// texture coords
+
+	-0.5f, -0.5f, -0.5f,
+	0.5f, 0.5f, -0.5f,		// Back face
+	0.5f, -0.5f, -0.5f,
+	0.5f, 0.5f, -0.5f,
+	-0.5f, -0.5f, -0.5f,
+	-0.5f, 0.5f, -0.5f,
+
+	-0.5f, -0.5f, 0.5f,
+	0.5f, -0.5f, 0.5f,
+	0.5f, 0.5f, 0.5f,		// Front face
+	0.5f, 0.5f, 0.5f,
+	-0.5f, 0.5f, 0.5f,
+	-0.5f, -0.5f, 0.5f,
+
+	-0.5f, 0.5f, 0.5f,
+	-0.5f, 0.5f, -0.5f,
+	-0.5f, -0.5f, -0.5f,	// Left face
+	-0.5f, -0.5f, -0.5f,
+	-0.5f, -0.5f, 0.5f,
+	-0.5f, 0.5f, 0.5f,
+
+	0.5f, 0.5f, 0.5f,
+	0.5f, -0.5f, -0.5f,		// Right face
+	0.5f, 0.5f, -0.5f,
+	0.5f, -0.5f, -0.5f,
+	0.5f, 0.5f, 0.5f,
+	0.5f, -0.5f, 0.5f,
+
+	-0.5f, -0.5f, -0.5f,
+	0.5f, -0.5f, -0.5f,	
+	0.5f, -0.5f, 0.5f,		// Bottom face
+	0.5f, -0.5f, 0.5f,	
+	-0.5f, -0.5f, 0.5f,	
+	-0.5f, -0.5f, -0.5f,
+
+	-0.5f,  0.5f, -0.5f,
+	0.5f, 0.5f, 0.5f,		// Top face
+	0.5f, 0.5f, -0.5f,
+	0.5f, 0.5f, 0.5f,
+	-0.5f, 0.5f, -0.5f,
+	-0.5f, 0.5f, 0.5f,
+};
+
+float g_SkyboxCubeVertices[] =
+{
+//		positions
+
+	-1.0f, 1.0f, -1.0f,
+	-1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, 1.0f, -1.0f,
+	-1.0f, 1.0f, -1.0f,
+
+	-1.0f, -1.0f, 1.0f,
+	-1.0f, -1.0f, -1.0f,
+	-1.0f, 1.0f, -1.0f,
+	-1.0f, 1.0f, -1.0f,
+	-1.0f, 1.0f, 1.0f,
+	-1.0f, -1.0f, 1.0f,
+
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+
+	-1.0f, -1.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, -1.0f, 1.0f,
+	-1.0f, -1.0f, 1.0f,
+
+	-1.0f, 1.0f, -1.0f,
+	1.0f, 1.0f, -1.0f,
+	1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f,
+	-1.0f, 1.0f, -1.0f,
+
+	-1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f, 1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f, 1.0f,
+	1.0f, -1.0f, 1.0f
+};
+
+
 //
 // Can't map texture indices (also normals, etc.) correctly in such a way, for up, bottom, left and right sides we will have incorrect texture sampling
 // 
@@ -209,6 +304,7 @@ unsigned int g_CubeIndices[] =
 size_t g_CubeVerticesWithNormalsSizeInBytes = sizeof(g_CubeVerticesWithNormals);
 size_t g_TexturedCubeVerticesSizeInBytes = sizeof(g_TexturedCubeVertices);
 size_t g_TexturedCubeVerticesWithNormalsSizeInBytes = sizeof(g_TexturedCubeVerticesWithNormals);
+size_t g_CubeVerticesSizeInBytes = sizeof(g_CubeVertices);
 
 
 //size_t g_CompactTexturedCubeVerticesSizeInBytes = sizeof(g_CompactTexturedCubeVertices);

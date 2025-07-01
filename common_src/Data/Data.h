@@ -8,10 +8,14 @@
 extern float g_CubeVerticesWithNormals[];
 extern float g_TexturedCubeVertices[];
 extern float g_TexturedCubeVerticesWithNormals[];
+extern float g_CubeVertices[];
+extern float g_SkyboxCubeVertices[];
 
 extern size_t g_CubeVerticesWithNormalsSizeInBytes;
 extern size_t g_TexturedCubeVerticesSizeInBytes;
 extern size_t g_TexturedCubeVerticesWithNormalsSizeInBytes;
+extern size_t g_CubeVerticesSizeInBytes;
+
 
 // Compact
 

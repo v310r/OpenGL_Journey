@@ -30,11 +30,11 @@ Mesh::Mesh(const std::string& pathToMesh, bool bLoadAsAssimpModel /*= false*/)
 	{
 		std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>((float*)&meshData.Vertices[0], meshData.Vertices.size() * 8); // multiply by 8 because each vertex has 8 floats (3 for position, 3 for normal, 2 for texture coordinates)
 		vertexBuffer->SetLayout(BufferLayout
-			{
-				{ShaderUtility::EShaderDataType::Float3, "aPos"},
-				{ShaderUtility::EShaderDataType::Float3, "aNormal"},
-				{ShaderUtility::EShaderDataType::Float2, "aTexCoords"}
-			});
+		{
+			{ShaderUtility::EShaderDataType::Float3, "aPos"},
+			{ShaderUtility::EShaderDataType::Float3, "aNormal"},
+			{ShaderUtility::EShaderDataType::Float2, "aTexCoords"}
+		});
 
 		m_VAO->AddVertexBuffer(vertexBuffer);
 

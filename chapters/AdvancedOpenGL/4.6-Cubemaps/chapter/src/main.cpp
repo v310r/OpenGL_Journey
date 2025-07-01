@@ -25,11 +25,13 @@
 
 #include "Buffers/Framebuffer.h"
 
+#include "Texture/CubemapTexture.h"
 
 #include "Utility/Log.h"
 #include "Utility/UtilityFunctions.h"
 
 #include "assimp/Importer.hpp"
+#include "Mesh/Mesh.h"
 
 
 int g_WindowWidth = 800;
@@ -52,6 +54,26 @@ struct SCube
 	STransform Transform;
 
 	std::shared_ptr<Material> MaterialData;
+};
+
+struct SSimpleCube
+{
+	STransform Transform;
+
+	std::shared_ptr<Shader> ShaderObject;
+
+	std::shared_ptr<VertexArray> VAO;
+};
+
+struct SSkyboxCube
+{
+	STransform Transform;
+
+	std::shared_ptr<Shader> ShaderObject;
+
+	std::shared_ptr<CubemapTexture> CubemapTextureData;
+
+	std::shared_ptr<VertexArray> VAO;
 };
 
 struct SQuad
@@ -144,7 +166,36 @@ int main()
 		quadVAO->SetIndexBuffer(sharedIndexBufferQuad);
 	}
 
+	std::shared_ptr<VertexArray> skyboxCubeVAO = std::make_shared<VertexArray>();
+	{
+		std::shared_ptr<VertexBuffer> skyboxVertexBuffer = std::make_shared<VertexBuffer>(g_SkyboxCubeVertices, g_CubeVerticesSizeInBytes / sizeof(g_CubeVertices[0]));
+		skyboxVertexBuffer->SetLayout(BufferLayout
+		{
+			{ShaderUtility::EShaderDataType::Float3, "aPos"}
+		});
+
+		skyboxCubeVAO->AddVertexBuffer(skyboxVertexBuffer);
+	}
+
+	std::shared_ptr<VertexArray> cubeVAOWithPositionsAndNormals = std::make_shared<VertexArray>();
+	{
+		std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(g_CubeVerticesWithNormals, g_CubeVerticesWithNormalsSizeInBytes / sizeof(g_CubeVerticesWithNormals[0]));
+		vertexBuffer->SetLayout(BufferLayout
+		{
+			{ShaderUtility::EShaderDataType::Float3, "aPos"},
+			{ShaderUtility::EShaderDataType::Float3, "aNormal"},
+		});
+
+		cubeVAOWithPositionsAndNormals->AddVertexBuffer(vertexBuffer);
+	}
+
 	std::shared_ptr<Shader> litShader = std::make_shared<Shader>("shaders/Lit.vert", "shaders/Lit.frag");
+
+	std::shared_ptr<Shader> skyboxShader = std::make_shared<Shader>("shaders/Skybox.vert", "shaders/Skybox.frag");
+
+	std::shared_ptr<Shader> reflectSkyboxShader = std::make_shared<Shader>("shaders/ReflectSkybox.vert", "shaders/ReflectSkybox.frag");
+
+	std::shared_ptr<Shader> refractSkyboxShader = std::make_shared<Shader>("shaders/RefractSkybox.vert", "shaders/RefractSkybox.frag");
 
 	std::shared_ptr<Texture> stubTexture = std::make_shared<Texture>(std::string(ASSETS_PATH) + "/BlackTexture.png", 0);
 
@@ -191,6 +242,31 @@ int main()
 	cubePositions.emplace_back(glm::vec3(2.0f, platformEntity.Transform.Translation.y + 0.55f, -3.0f));
 	cubePositions.emplace_back(glm::vec3(-1.5f, platformEntity.Transform.Translation.y + 0.55f, -2.5f));
 
+	SSimpleCube skyboxReflectedCube;
+	{
+		skyboxReflectedCube.Transform.Translation = glm::vec3(4.0f, -3.0f, 0.0f);
+		skyboxReflectedCube.Transform.Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+		skyboxReflectedCube.ShaderObject = reflectSkyboxShader;
+
+		skyboxReflectedCube.VAO = cubeVAOWithPositionsAndNormals;
+	}
+
+	SSimpleCube skyboxRefractedCube;
+	{
+		skyboxRefractedCube.Transform.Translation = glm::vec3(-4.0f, -3.0f, 0.0f);
+		skyboxRefractedCube.Transform.Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+		skyboxRefractedCube.ShaderObject = refractSkyboxShader;
+
+		skyboxRefractedCube.VAO = cubeVAOWithPositionsAndNormals;
+
+	}
+
+	std::shared_ptr<Mesh> backpackMesh = std::make_shared<Mesh>(std::string(ASSETS_PATH) + "/backpack/backpack.obj");
+	STransform backpackTransform;
+	backpackTransform.Translation = glm::vec3(4.0f, -4.0f, -4.0f);
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
@@ -199,7 +275,31 @@ int main()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	Framebuffer postProcessFramebuffer(g_WindowWidth, g_WindowHeight);
+	std::shared_ptr<CubemapTexture> skyboxTexture = std::make_shared<CubemapTexture>(std::string(ASSETS_PATH) + "/skybox/", CubemapSourceTextureList
+	{
+		{
+			{ "right.jpg",	CubemapTextureOrientation::Right	},
+			{ "left.jpg",	CubemapTextureOrientation::Left		},
+			{ "top.jpg",	CubemapTextureOrientation::Top		},
+			{ "bottom.jpg", CubemapTextureOrientation::Bottom	},
+
+			// these two below were swapped intentionally to display everything correctly
+			{ "back.jpg",	CubemapTextureOrientation::Front	},
+			{ "front.jpg",	CubemapTextureOrientation::Back		}
+		}
+	});
+
+	SSkyboxCube skyboxCube;
+	{
+		skyboxCube.Transform.Translation = glm::vec3(0.0f, 0.0f, 0.0f);
+		skyboxCube.Transform.Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+		skyboxCube.CubemapTextureData = skyboxTexture;
+
+		skyboxCube.ShaderObject = skyboxShader;
+
+		skyboxCube.VAO = skyboxCubeVAO;
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -215,6 +315,8 @@ int main()
 
 		RenderCommand::SetClearColor(glm::vec4(g_ClearColor, 1.0f));
 		RenderCommand::Clear();
+
+		glDepthFunc(GL_LESS);
 
 		// PLATFORM
 		{
@@ -253,6 +355,60 @@ int main()
 				Renderer::Draw(cubeVAO, litShader);
 			}
 		}
+
+		// CUBE AND BACKPACK WHICH _REFLECT_ SKYBOX
+		{
+			//glDepthFunc(GL_LEQUAL); // this is needed to render skybox correctly, otherwise it will not be rendered at all
+			skyboxReflectedCube.ShaderObject->Bind();
+
+			skyboxReflectedCube.ShaderObject->SetMat4("view", Renderer::GetView());
+			skyboxReflectedCube.ShaderObject->SetMat4("projection", Renderer::GetProjection());
+
+			skyboxReflectedCube.ShaderObject->SetMat4("model", UtilityFunctions::CalculateTransformMatrix(skyboxReflectedCube.Transform));
+			skyboxReflectedCube.ShaderObject->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * UtilityFunctions::CalculateTransformMatrix(skyboxReflectedCube.Transform)))));
+
+			skyboxReflectedCube.ShaderObject->SetFloat3("cameraPos", g_Camera.GetPosition());
+
+			skyboxCube.CubemapTextureData->Bind();
+			Renderer::Draw(skyboxReflectedCube.VAO, skyboxReflectedCube.ShaderObject);
+
+			backpackTransform.Translation = glm::vec3(skyboxReflectedCube.Transform.Translation.x, -4.0f, -4.0f);
+			skyboxReflectedCube.ShaderObject->SetMat4("model", UtilityFunctions::CalculateTransformMatrix(backpackTransform));
+
+			Renderer::Draw(backpackMesh->GetVAO(), skyboxReflectedCube.ShaderObject);
+		}
+
+		// CUBE AND BACKPACK WHICH _REFRACT_ SKYBOX
+		{
+			//glDepthFunc(GL_LEQUAL); // this is needed to render skybox correctly, otherwise it will not be rendered at all
+			skyboxRefractedCube.ShaderObject->Bind();
+
+			skyboxRefractedCube.ShaderObject->SetMat4("view", Renderer::GetView());
+			skyboxRefractedCube.ShaderObject->SetMat4("projection", Renderer::GetProjection());
+
+			skyboxRefractedCube.ShaderObject->SetMat4("model", UtilityFunctions::CalculateTransformMatrix(skyboxRefractedCube.Transform));
+			skyboxRefractedCube.ShaderObject->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * UtilityFunctions::CalculateTransformMatrix(skyboxRefractedCube.Transform)))));
+
+			skyboxRefractedCube.ShaderObject->SetFloat3("cameraPos", g_Camera.GetPosition());
+
+			skyboxCube.CubemapTextureData->Bind();
+			Renderer::Draw(skyboxRefractedCube.VAO, skyboxRefractedCube.ShaderObject);
+
+			backpackTransform.Translation = glm::vec3(skyboxRefractedCube.Transform.Translation.x, -4.0f, -4.0f);
+			skyboxRefractedCube.ShaderObject->SetMat4("model", UtilityFunctions::CalculateTransformMatrix(backpackTransform));
+
+			Renderer::Draw(backpackMesh->GetVAO(), skyboxRefractedCube.ShaderObject);
+		}
+
+		glDepthFunc(GL_LEQUAL);
+		skyboxCube.ShaderObject->Bind();
+
+		skyboxCube.ShaderObject->SetMat4("view", glm::mat4(glm::mat3(Renderer::GetView())));
+		skyboxCube.ShaderObject->SetMat4("projection", Renderer::GetProjection());
+
+		skyboxCube.CubemapTextureData->Bind();
+		skyboxCube.VAO->Bind();
+		Renderer::Draw(skyboxCube.VAO, skyboxCube.ShaderObject);
 
 		Renderer::EndScene();
 
