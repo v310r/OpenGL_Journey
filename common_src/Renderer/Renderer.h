@@ -4,6 +4,8 @@
 
 #include "glm.hpp"
 
+#include "RenderCommand.h"
+
 class FlyCamera;
 class VertexArray;
 class Shader;
@@ -18,13 +20,13 @@ public:
 
 	static void BeginScene(const FlyCamera& camera, float windowWidth = 800.0f, float windowHeight = 800.0f);
 
-	static void Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Shader>& shader);
+	static void Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Shader>& shader, const SDrawSettings& drawSettings = SDrawSettings());
 
-	static void Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Material>& Material);
+	static void Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Material>& Material, const SDrawSettings& drawSettings = SDrawSettings());
 
-	static void Draw(const std::shared_ptr<Mesh>& mesh);
+	static void Draw(const std::shared_ptr<Mesh>& mesh, const SDrawSettings& drawSettings = SDrawSettings());
 
-	static void Draw(const std::shared_ptr<Entity>& entity);
+	static void Draw(const std::shared_ptr<Entity>& entity, const SDrawSettings& drawSettings = SDrawSettings());
 
 
 	static void EndScene();

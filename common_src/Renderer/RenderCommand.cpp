@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Buffers/VertexArray.h"
+#include "Utility/UtilityFunctions.h"
 
 
 void RenderCommand::SetClearColor(const glm::vec4& color)
@@ -12,17 +13,21 @@ void RenderCommand::SetClearColor(const glm::vec4& color)
 	glClearColor(color.x, color.y, color.z, color.w);
 }
 
-void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& vao, uint32_t indexCount /*= 0*/)
+void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& vao, uint32_t indexCount /*= 0*/, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
+	GLenum mode = UtilityFunctions::ConvertDrawPrimitiveModeToOpenGL(drawSettings.PrimitiveMode);
+
 	vao->Bind();
 	uint32_t count = indexCount ? indexCount : vao->GetIndexBufferCount();
-	glDrawElements(GL_TRIANGLES, (GLsizei)count, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(mode, (GLsizei)count, GL_UNSIGNED_INT, nullptr);
 }
 
-void RenderCommand::DrawUnindexed(const std::shared_ptr<VertexArray>& vao)
+void RenderCommand::DrawUnindexed(const std::shared_ptr<VertexArray>& vao, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
+	GLenum mode = UtilityFunctions::ConvertDrawPrimitiveModeToOpenGL(drawSettings.PrimitiveMode);
+
 	vao->Bind();
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vao->GetVertexCount());
+	glDrawArrays(mode, 0, (GLsizei)vao->GetVertexCount());
 }
 
 void RenderCommand::ClearColor()

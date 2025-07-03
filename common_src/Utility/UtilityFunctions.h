@@ -8,6 +8,7 @@
 struct STransform;
 
 enum class CubemapTextureOrientation :uint8_t;
+enum class EDrawPrimitiveMode;
 
 namespace UtilityFunctions
 {
@@ -17,4 +18,6 @@ namespace UtilityFunctions
 	glm::mat4 CalculateTransformMatrix(const STransform& transform);
 
 	int32_t ConvertCubemapTextureOrientationToOpenGL(CubemapTextureOrientation inOrientation);
+
+	uint32_t ConvertDrawPrimitiveModeToOpenGL(EDrawPrimitiveMode inMode);
 }

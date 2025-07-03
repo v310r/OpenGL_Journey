@@ -23,49 +23,49 @@ void Renderer::BeginScene(const FlyCamera& camera, float windowWidth /*= 800.0f*
 	Renderer::SetProjection(glm::perspective(glm::radians(camera.GetZoom()), windowWidth / windowHeight, 0.1f, 100.0f));
 }
 
-void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Shader>& shader)
+void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Shader>& shader, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
 	shader->Bind();
 	// TODO: set camera related uniforms
 
 	if (vao->HasIndexBuffer())
 	{
-		RenderCommand::DrawIndexed(vao);
+		RenderCommand::DrawIndexed(vao, 0, drawSettings);
 	}
 	else
 	{
-		RenderCommand::DrawUnindexed(vao);
+		RenderCommand::DrawUnindexed(vao, drawSettings);
 	}
 
 }
 
-void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Material>& Material)
+void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Material>& Material, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
 	if (vao->HasIndexBuffer())
 	{
-		RenderCommand::DrawIndexed(vao);
+		RenderCommand::DrawIndexed(vao, 0, drawSettings);
 	}
 	else
 	{
-		RenderCommand::DrawUnindexed(vao);
+		RenderCommand::DrawUnindexed(vao, drawSettings);
 	}
 }
 
-void Renderer::Draw(const std::shared_ptr<Mesh>& mesh)
+void Renderer::Draw(const std::shared_ptr<Mesh>& mesh, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
 	mesh->Bind();
 
 	if (mesh->GetVAO()->HasIndexBuffer())
 	{
-		RenderCommand::DrawIndexed(mesh->GetVAO());
+		RenderCommand::DrawIndexed(mesh->GetVAO(), 0,  drawSettings);
 	}
 	else
 	{
-		RenderCommand::DrawUnindexed(mesh->GetVAO());
+		RenderCommand::DrawUnindexed(mesh->GetVAO(), drawSettings);
 	}
 }
 
-void Renderer::Draw(const std::shared_ptr<Entity>& entity)
+void Renderer::Draw(const std::shared_ptr<Entity>& entity, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
 	for (std::shared_ptr<Mesh> mesh : entity->GetMeshes())
 	{
@@ -81,7 +81,7 @@ void Renderer::Draw(const std::shared_ptr<Entity>& entity)
 
 		shader->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * modelMatrix))));
 
-		Renderer::Draw(mesh);
+		Renderer::Draw(mesh, drawSettings);
 	}
 }
 

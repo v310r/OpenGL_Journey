@@ -5,6 +5,9 @@
 #include "Core/Core.h"
 #include "Texture/CubemapTexture.h"
 
+#include "Renderer/RenderCommand.h"
+#include "Log.h"
+
 
 glm::vec3 UtilityFunctions::GetForwardDirection(const glm::mat4 rotationMatrix)
 {
@@ -35,5 +38,20 @@ int32_t UtilityFunctions::ConvertCubemapTextureOrientationToOpenGL(CubemapTextur
 		case CubemapTextureOrientation::Front:	return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 
 		default: return -1;
+	}
+}
+
+uint32_t UtilityFunctions::ConvertDrawPrimitiveModeToOpenGL(EDrawPrimitiveMode inMode)
+{
+	switch (inMode)
+	{
+		case EDrawPrimitiveMode::Points:		return GL_POINTS;
+		case EDrawPrimitiveMode::Lines:			return GL_LINES;
+		case EDrawPrimitiveMode::Triangles:		return GL_TRIANGLES;
+		case EDrawPrimitiveMode::TriangleStrip:	return GL_TRIANGLE_STRIP;
+		case EDrawPrimitiveMode::TriangleFan:	return GL_TRIANGLE_FAN;
+
+		LOG_ERROR("Can't convert inMode to meaningful EDrawPrimitiveMode; inMode = {0}", static_cast<int>(inMode));
+		default: return (uint32_t)-1;
 	}
 }

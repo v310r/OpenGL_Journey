@@ -93,3 +93,8 @@ workspace "OpenGL_Journey"
     dofile("chapters/AdvancedOpenGL/4.5-Framebuffers/premake5.lua")
 
     dofile("chapters/AdvancedOpenGL/4.6-Cubemaps/premake5.lua")
+
+    dofile("chapters/AdvancedOpenGL/4.7-AdvancedData/premake5.lua")
+
+    dofile("chapters/AdvancedOpenGL/4.8-AdvancedGLSL/premake5.lua")
+
