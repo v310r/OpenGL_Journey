@@ -22,9 +22,14 @@ Mesh::Mesh(const std::string& pathToMesh, bool bLoadAsAssimpModel /*= false*/)
 		return;
 	}
 
-	auto& [meshAssetHandle, rawMeshData] = outMeshLoadHelper.MeshData;
+	auto& [meshAssetHandle, rawMeshDataPtr] = outMeshLoadHelper.MeshData;
+	if (!rawMeshDataPtr)
+	{
+		LOG_ERROR("Failed to load mesh; Path: {0}", pathToMesh);
+		return;
+	}
 
-	SRawMeshData& meshData = rawMeshData;
+	SRawMeshData& meshData = *rawMeshDataPtr;
 
 	m_VAO = std::make_shared<VertexArray>();
 	{
@@ -73,15 +78,71 @@ Mesh::Mesh(const std::string& pathToMesh, bool bLoadAsAssimpModel /*= false*/)
 	}
 
 	AssetManager::UpdateUsageCounter(meshAssetHandle);
+}
 
-	//if (bLoadAsAssimpModel)
-	//{
-	//	LoadAsAssimpModel(pathToMesh);
-	//}
-	//else
-	//{
-	//	LoadOneMesh(pathToMesh);
-	//}
+Mesh::Mesh(const std::string& pathToMesh, const std::shared_ptr<Shader>& associatedShader)
+{
+	SSingleMeshLoadHelper outMeshLoadHelper;
+	if (AssetManager::LoadMesh(pathToMesh, outMeshLoadHelper) == false)
+	{
+		LOG_INFO("Failed to load mesh; Path: {0}", pathToMesh);
+		return;
+	}
+
+	auto& [meshAssetHandle, rawMeshDataPtr] = outMeshLoadHelper.MeshData;
+	if (!rawMeshDataPtr)
+	{
+		LOG_ERROR("Failed to load mesh; Path: {0}", pathToMesh);
+		return;
+	}
+
+	SRawMeshData& meshData = *rawMeshDataPtr;
+
+	m_VAO = std::make_shared<VertexArray>();
+	{
+		std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>((float*)&meshData.Vertices[0], meshData.Vertices.size() * 8); // multiply by 8 because each vertex has 8 floats (3 for position, 3 for normal, 2 for texture coordinates)
+		vertexBuffer->SetLayout(BufferLayout
+			{
+				{ShaderUtility::EShaderDataType::Float3, "aPos"},
+				{ShaderUtility::EShaderDataType::Float3, "aNormal"},
+				{ShaderUtility::EShaderDataType::Float2, "aTexCoords"}
+			});
+
+		m_VAO->AddVertexBuffer(vertexBuffer);
+
+		std::shared_ptr<IndexBuffer> indexBuffer = std::make_shared<IndexBuffer>(&meshData.Indices[0], (uint32_t)meshData.Indices.size());
+		m_VAO->SetIndexBuffer(indexBuffer);
+	}
+
+	m_Material = std::make_shared<VersatileMaterial>(associatedShader);
+
+	m_Material->SetShininess(32.0f);
+
+	int32_t textureUnit = 0;
+	for (SAssetHandle textureAssetHandle : meshData.TextureHandleSet)
+	{
+		const std::string meshTexturePath = AssetManager::GetAssetPath(textureAssetHandle);
+
+		// we only support forward rendering for now and each object is rendered with a single material
+		// TextureUnit is bound and overriden for each draw call
+
+		std::shared_ptr<Texture> texture = std::make_shared<Texture>(meshTexturePath, textureUnit);
+		++textureUnit;
+
+		const ETextureType textureType = AssetManager::GetCachedTextureType(textureAssetHandle);
+		switch (textureType)
+		{
+		case ETextureType::Diffuse:		m_Material->AddDiffuse(texture);	continue;
+		case ETextureType::Specular:	m_Material->AddSpecular(texture);	continue;
+		case ETextureType::Emission:	m_Material->AddEmission(texture);	continue;
+		default:
+		{
+			LOG_WARN("Unknown texture type: {0}", static_cast<int>(textureType));
+		}
+		}
+	}
+
+	AssetManager::UpdateUsageCounter(meshAssetHandle);
 }
 
 std::shared_ptr<VertexArray> Mesh::GetVAO() const
@@ -91,8 +152,15 @@ std::shared_ptr<VertexArray> Mesh::GetVAO() const
 
 void Mesh::Bind()
 {
-	m_VAO->Bind();
-	m_Material->Bind();
+	if (m_VAO.get())
+	{
+		m_VAO->Bind();
+	}
+
+	if (m_Material.get())
+	{
+		m_Material->Bind();
+	}
 }
 
 std::shared_ptr<Shader> Mesh::GetShader() const

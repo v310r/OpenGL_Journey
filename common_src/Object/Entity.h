@@ -8,6 +8,7 @@
 #include "glm.hpp"
 
 class Mesh;
+class Shader;
 
 // not ECS based
 class Entity
@@ -18,6 +19,8 @@ public:
 	void AddMesh(const std::shared_ptr<Mesh>& mesh);
 
 	void AddMesh(const std::string& meshPath);
+
+	void AddMesh(const std::string& meshPath, const std::shared_ptr<Shader>& associatedShader);
 
 	const STransform& GetTransform() const;
 	Entity& SetTransform(const STransform& transform);

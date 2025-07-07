@@ -98,3 +98,4 @@ workspace "OpenGL_Journey"
 
     dofile("chapters/AdvancedOpenGL/4.8-AdvancedGLSL/premake5.lua")
 
+    dofile("chapters/AdvancedOpenGL/4.9-GeometryShader/premake5.lua")

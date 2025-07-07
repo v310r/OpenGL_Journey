@@ -17,10 +17,20 @@ class SpotLight;
 
 struct STransform;
 
+enum class EShaderType : uint8_t
+{
+	None = 0,
+	VertexShader,
+	FragmentShader,
+	GeometryShader
+};
+
 class Shader
 {
 public:
-	Shader(const char* vertexShaderPath, const char* fragmentShaderPath);
+	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+
+	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const std::string& geometryShaderPath);
 
 	unsigned int GetID() const { return m_ID; }
 
@@ -48,5 +58,7 @@ public:
 	void SetSpotLight(const SpotLight& inSpotLight, const std::string& inName, const STransform& inTransform);
 
 private:
+	uint32_t CompileShader(const std::string& shaderPath, EShaderType shaderType) const;
+
 	unsigned int m_ID;
 };

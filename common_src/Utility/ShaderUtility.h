@@ -2,6 +2,10 @@
 
 #include "glad/glad.h"
 
+#include <string>
+#include <cstdint>
+
+enum class EShaderType : uint8_t;
 
 namespace ShaderUtility
 {
@@ -26,4 +30,10 @@ namespace ShaderUtility
 	unsigned int GetShaderDataTypeCount(EShaderDataType type);
 
 	GLenum ConvertShaderDataTypeToOpenGLType(EShaderDataType type);
+
+	EShaderType ConvertShaderPathToShaderType(const std::string& shaderPath);
+
+	uint32_t ConvertShaderTypeToOpenGLType(EShaderType type);
+
+	uint32_t ConvertShaderPathToOpenGLType(const std::string& shaderPath);
 }

@@ -19,6 +19,12 @@ void Entity::AddMesh(const std::string& meshPath)
 	AddMesh(mesh);
 }
 
+void Entity::AddMesh(const std::string& meshPath, const std::shared_ptr<Shader>& associatedShader)
+{
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(meshPath, associatedShader);
+	AddMesh(mesh);
+}
+
 const STransform& Entity::GetTransform() const
 {
 	return m_Transform;

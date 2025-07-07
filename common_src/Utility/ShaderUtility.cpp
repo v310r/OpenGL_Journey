@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+#include "Shader1/Shader.h"
+
 
 unsigned int ShaderUtility::GetShaderDataTypeSizeInBytes(ShaderUtility::EShaderDataType type)
 {
@@ -61,4 +63,41 @@ GLenum ShaderUtility::ConvertShaderDataTypeToOpenGLType(EShaderDataType type)
 
         default:       assert(false && "Unknown type"); return 0;
     }
+}
+
+EShaderType ShaderUtility::ConvertShaderPathToShaderType(const std::string& shaderPath)
+{
+	if (shaderPath.find(".vert") != std::string::npos)
+	{
+		return EShaderType::VertexShader;
+	}
+	else if (shaderPath.find(".frag") != std::string::npos)
+	{
+		return EShaderType::FragmentShader;
+	}
+	else if (shaderPath.find(".geom") != std::string::npos)
+	{
+		return EShaderType::GeometryShader;
+	}
+
+	assert(false && "Unknown shader type");
+	return EShaderType::None;
+}
+
+uint32_t ShaderUtility::ConvertShaderTypeToOpenGLType(EShaderType type)
+{
+	switch (type)
+	{
+		case EShaderType::VertexShader:		return GL_VERTEX_SHADER;
+		case EShaderType::FragmentShader:	return GL_FRAGMENT_SHADER;
+		case EShaderType::GeometryShader:	return GL_GEOMETRY_SHADER;
+
+		default: assert(false && "Unknown shader type"); return 0;
+	}
+}
+
+uint32_t ShaderUtility::ConvertShaderPathToOpenGLType(const std::string& shaderPath)
+{
+	const EShaderType shaderType = ConvertShaderPathToShaderType(shaderPath);
+	return ConvertShaderTypeToOpenGLType(shaderType);
 }

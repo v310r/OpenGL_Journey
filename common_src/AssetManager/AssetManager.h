@@ -108,7 +108,7 @@ public:
 	// not really useful after the mesh is loaded, but we need it to process Assimp nodes
 	uint64_t IndexOffset = 0;
 
-	std::pair<SAssetHandle, SRawMeshData> MeshData;
+	std::pair<SAssetHandle, SRawMeshData*> MeshData;
 };
 
 // AssetManager will hold last references to assets, and deallocate assets upon it's own deallocation

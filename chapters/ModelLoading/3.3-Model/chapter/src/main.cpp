@@ -278,6 +278,9 @@ int main()
 			SetShaderUniformsForDirectionalLight(backpackMesh->GetShader(), directionalLight);
 			SetShaderUniformsForPointLights(backpackMesh->GetShader(), pointLightCube);
 			SetShaderUniformsForSpotlight(backpackMesh->GetShader(), spotLight);
+
+			backpackMesh->GetShader()->SetMat4("view", Renderer::GetView());
+			backpackMesh->GetShader()->SetMat4("projection", Renderer::GetProjection());
 		}
 
 		Renderer::Draw(backpackEntity);

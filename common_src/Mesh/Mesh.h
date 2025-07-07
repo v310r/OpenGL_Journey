@@ -13,6 +13,8 @@ class Mesh
 public:
 	Mesh(const std::string& pathToMesh, bool bLoadAsAssimpModel = false);
 
+	Mesh(const std::string& pathToMesh, const std::shared_ptr<Shader>& associatedShader);
+
 	std::shared_ptr<VertexArray> GetVAO() const;
 
 	void Bind();

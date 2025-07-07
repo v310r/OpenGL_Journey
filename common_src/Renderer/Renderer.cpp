@@ -76,8 +76,8 @@ void Renderer::Draw(const std::shared_ptr<Entity>& entity, const SDrawSettings& 
 
 		glm::mat4 modelMatrix = UtilityFunctions::CalculateTransformMatrix(entity->GetTransform());
 		shader->SetMat4("model", modelMatrix);
-		shader->SetMat4("view", Renderer::GetView());
-		shader->SetMat4("projection", Renderer::GetProjection());
+		//shader->SetMat4("view", Renderer::GetView());
+		//shader->SetMat4("projection", Renderer::GetProjection());
 
 		shader->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * modelMatrix))));
 

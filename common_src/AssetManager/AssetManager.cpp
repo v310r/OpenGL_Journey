@@ -219,6 +219,14 @@ bool AssetManager::LoadAssimpModelImpl(SAssetHandle handle, SSingleMeshLoadHelpe
 {
 	Assimp::Importer importer;
 
+	auto meshIter = m_MeshMap.find(handle);
+	if (meshIter != m_MeshMap.end())
+	{
+		outMeshLoader.MeshData.first = meshIter->first;
+		outMeshLoader.MeshData.second = &meshIter->second;
+		return true;
+	}
+
 	const std::string path = GetAssetPath(handle);
 	if (path.empty())
 	{
@@ -242,6 +250,9 @@ bool AssetManager::LoadAssimpModelImpl(SAssetHandle handle, SSingleMeshLoadHelpe
 
 	outMeshLoader.MeshData.first = handle;
 
+	m_MeshMap.emplace(handle, SRawMeshData());
+	outMeshLoader.MeshData.second = &m_MeshMap[handle];
+
 	ProcessAssimpNode(scene->mRootNode, scene, outMeshLoader);
 
 	return true;
@@ -249,7 +260,7 @@ bool AssetManager::LoadAssimpModelImpl(SAssetHandle handle, SSingleMeshLoadHelpe
 
 void AssetManager::ProcessAssimpNode(aiNode* node, const aiScene* scene, SSingleMeshLoadHelper& outMeshLoader)
 {
-	const auto& [meshAssetHandle, rawMeshData] = outMeshLoader.MeshData;
+	const auto& [meshAssetHandle, rawMeshDataPtr] = outMeshLoader.MeshData;
 
 	// process all the node's meshes (if any)
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -268,7 +279,8 @@ void AssetManager::ProcessAssimpNode(aiNode* node, const aiScene* scene, SSingle
 
 void AssetManager::ProcessAssimpMesh(SAssetHandle parentHandle, aiMesh* mesh, const aiScene* scene, SSingleMeshLoadHelper& outMeshLoader)
 {
-	auto& [meshAssetHandle, outMeshData] = outMeshLoader.MeshData;
+	auto& [meshAssetHandle, outMeshDataPtr] = outMeshLoader.MeshData;
+	SRawMeshData& outMeshData = *outMeshDataPtr;
 
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
