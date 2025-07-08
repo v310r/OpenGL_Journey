@@ -17,6 +17,9 @@ public:
 
 	void Unbind();
 
+	void SetIsIncludingInstanceData(bool bValue);
+	bool IsIncludingInstanceData() const;
+
 	const BufferLayout& GetLayout() const { return m_Layout; }
 	void SetLayout(const BufferLayout& layout);
 
@@ -47,4 +50,7 @@ protected:
 	uint32_t m_DataSizeInBytes = 0;
 
 	uint32_t m_Id = 0;
+
+	// if this buffer is used for instancing
+	bool bIncludeInstanceData = false;
 };

@@ -20,7 +20,7 @@ Renderer* Renderer::Get()
 void Renderer::BeginScene(const FlyCamera& camera, float windowWidth /*= 800.0f*/, float windowHeight /*= 800.0f*/)
 {
 	Renderer::SetView(camera.GetViewMatrix());
-	Renderer::SetProjection(glm::perspective(glm::radians(camera.GetZoom()), windowWidth / windowHeight, 0.1f, 100.0f));
+	Renderer::SetProjection(glm::perspective(glm::radians(camera.GetZoom()), windowWidth / windowHeight, 0.1f, 300.0f));
 }
 
 void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Shader>& shader, const SDrawSettings& drawSettings /*= SDrawSettings()*/)

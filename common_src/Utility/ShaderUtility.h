@@ -9,7 +9,7 @@ enum class EShaderType : uint8_t;
 
 namespace ShaderUtility
 {
-	enum class EShaderDataType
+	enum class EShaderDataType : uint8_t
 	{
 		None = 0,
 		Float,

@@ -102,11 +102,11 @@ Mesh::Mesh(const std::string& pathToMesh, const std::shared_ptr<Shader>& associa
 	{
 		std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>((float*)&meshData.Vertices[0], meshData.Vertices.size() * 8); // multiply by 8 because each vertex has 8 floats (3 for position, 3 for normal, 2 for texture coordinates)
 		vertexBuffer->SetLayout(BufferLayout
-			{
-				{ShaderUtility::EShaderDataType::Float3, "aPos"},
-				{ShaderUtility::EShaderDataType::Float3, "aNormal"},
-				{ShaderUtility::EShaderDataType::Float2, "aTexCoords"}
-			});
+		{
+			{ShaderUtility::EShaderDataType::Float3, "aPos"},
+			{ShaderUtility::EShaderDataType::Float3, "aNormal"},
+			{ShaderUtility::EShaderDataType::Float2, "aTexCoords"}
+		});
 
 		m_VAO->AddVertexBuffer(vertexBuffer);
 
@@ -166,6 +166,31 @@ void Mesh::Bind()
 std::shared_ptr<Shader> Mesh::GetShader() const
 {
 	return m_Material->GetShader();
+}
+
+std::shared_ptr<VersatileMaterial> Mesh::GetMaterial() const
+{
+	return m_Material;
+}
+
+const STransform& Mesh::GetTransform() const
+{
+	return m_Transform;
+}
+
+void Mesh::SetTranslation(const glm::vec3& translation)
+{
+	m_Transform.Translation = translation;
+}
+
+void Mesh::SetRotation(const glm::vec3& rotation)
+{
+	m_Transform.Rotation = rotation;
+}
+
+void Mesh::SetScale(const glm::vec3& scale)
+{
+	m_Transform.Scale = scale;
 }
 
 void Mesh::LoadOneMesh(const std::string& pathToMesh)

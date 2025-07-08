@@ -21,6 +21,12 @@ public:
 
 	void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer);
 
+	void SetInstanceAmount(uint32_t inAmount = 1);
+	uint32_t GetInstanceAmount() const;
+
+	void SetInstanceSetup(bool bValue);
+	bool HasInstanceSetup() const;
+
 	uint32_t GetVertexCount() const;
 
 	bool HasIndexBuffer() const;
@@ -37,4 +43,13 @@ private:
 	std::shared_ptr<IndexBuffer> m_IndexBuffer;
 
 	uint32_t m_VertexCount = 0;
+
+	uint32_t m_LastAvailableAttributeIndex = 0;
+
+	// how many instances of this VAO will be rendered in a single draw call
+	uint32_t m_InstanceAmount = 1;
+
+	bool bHasInstanceSetup = false;
+
+
 };

@@ -19,7 +19,15 @@ void RenderCommand::DrawIndexed(const std::shared_ptr<VertexArray>& vao, uint32_
 
 	vao->Bind();
 	uint32_t count = indexCount ? indexCount : vao->GetIndexBufferCount();
-	glDrawElements(mode, (GLsizei)count, GL_UNSIGNED_INT, nullptr);
+
+	if (vao->HasInstanceSetup())
+	{
+		glDrawElementsInstanced(mode, (GLsizei)count, GL_UNSIGNED_INT, nullptr, vao->GetInstanceAmount());
+	}
+	else
+	{
+		glDrawElements(mode, (GLsizei)count, GL_UNSIGNED_INT, nullptr);
+	}
 }
 
 void RenderCommand::DrawUnindexed(const std::shared_ptr<VertexArray>& vao, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
@@ -27,7 +35,14 @@ void RenderCommand::DrawUnindexed(const std::shared_ptr<VertexArray>& vao, const
 	GLenum mode = UtilityFunctions::ConvertDrawPrimitiveModeToOpenGL(drawSettings.PrimitiveMode);
 
 	vao->Bind();
-	glDrawArrays(mode, 0, (GLsizei)vao->GetVertexCount());
+	if (vao->HasInstanceSetup())
+	{
+		glDrawArraysInstanced(mode, 0, (GLsizei)vao->GetVertexCount(), vao->GetInstanceAmount());
+	}
+	else
+	{
+		glDrawArrays(mode, 0, (GLsizei)vao->GetVertexCount());
+	}
 }
 
 void RenderCommand::ClearColor()

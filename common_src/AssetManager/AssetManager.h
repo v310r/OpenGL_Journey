@@ -142,6 +142,8 @@ public:
 	static void UpdateUsageCounter(SAssetHandle handle);
 	static void DecreaseUsed(SAssetHandle handle);
 
+	void CacheTextureType(SAssetHandle textureHandle, ETextureType type);
+
 protected:
 	bool LoadTextureImpl(SAssetHandle handle, std::pair<SAssetHandle, SRawTextureData>& outTextureData);
 
@@ -172,8 +174,6 @@ protected:
 	void NullifyCounter(SAssetHandle handle);
 
 	void SaveAssetHandleMappingToString(SAssetHandle handle, const std::string& pathToFile);
-
-	void CacheTextureType(SAssetHandle textureHandle, ETextureType type);
 
 	static AssetManager* s_AssetManager;
 

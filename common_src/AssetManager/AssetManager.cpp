@@ -289,9 +289,12 @@ void AssetManager::ProcessAssimpMesh(SAssetHandle parentHandle, aiMesh* mesh, co
 		vertex.Position.y = mesh->mVertices[i].y;
 		vertex.Position.z = mesh->mVertices[i].z;
 
-		vertex.Normal.x = mesh->mNormals[i].x;
-		vertex.Normal.y = mesh->mNormals[i].y;
-		vertex.Normal.z = mesh->mNormals[i].z;
+		if (mesh->mNormals)
+		{
+			vertex.Normal.x = mesh->mNormals[i].x;
+			vertex.Normal.y = mesh->mNormals[i].y;
+			vertex.Normal.z = mesh->mNormals[i].z;
+		}
 
 		if (mesh->mTextureCoords[0])
 		{

@@ -27,6 +27,16 @@ void VertexBuffer::Unbind()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void VertexBuffer::SetIsIncludingInstanceData(bool bValue)
+{
+	bIncludeInstanceData = bValue;
+}
+
+bool VertexBuffer::IsIncludingInstanceData() const
+{
+	return bIncludeInstanceData;
+}
+
 void VertexBuffer::SetLayout(const BufferLayout& layout)
 {
 	m_Layout = layout;
