@@ -111,6 +111,11 @@ void Material::SetShader(const std::shared_ptr<Shader>& shader)
 }
 
 
+const std::shared_ptr<Shader>& Material::GetShader() const
+{
+	return m_ShaderRef;
+}
+
 //////////////////////////////////
 //////////////////////////////////
 //////////////////////////////////
@@ -179,4 +184,9 @@ void SimpleMaterial::SetShininess(float value)
 void SimpleMaterial::SetShader(const std::shared_ptr<Shader>& shader)
 {
 	m_ShaderRef = shader;
+}
+
+const std::shared_ptr<Shader>& SimpleMaterial::GetShader() const
+{
+	return m_ShaderRef;
 }

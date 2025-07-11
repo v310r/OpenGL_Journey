@@ -31,6 +31,7 @@ public:
 	void SetShininess(float value);
 
 	void SetShader(const std::shared_ptr<Shader>& shader);
+	const std::shared_ptr<Shader>& GetShader() const;
 
 protected:
 	std::shared_ptr<Texture> m_DiffuseTexture;
@@ -64,6 +65,7 @@ public:
 	void SetShininess(float value);
 
 	void SetShader(const std::shared_ptr<Shader>& shader);
+	const std::shared_ptr<Shader>& GetShader() const;
 
 protected:
 	glm::vec3 m_Ambient;

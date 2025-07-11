@@ -41,6 +41,8 @@ void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_p
 
 void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Material>& Material, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
+	Material->Bind();
+
 	if (vao->HasIndexBuffer())
 	{
 		RenderCommand::DrawIndexed(vao, 0, drawSettings);
