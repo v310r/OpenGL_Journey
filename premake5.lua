@@ -102,3 +102,4 @@ workspace "OpenGL_Journey"
 
     dofile("chapters/AdvancedOpenGL/4.10-Instancing/premake5.lua")
 
+    dofile("chapters/AdvancedOpenGL/4.11-AntiAliasing/premake5.lua")
