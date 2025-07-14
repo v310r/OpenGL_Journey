@@ -49,7 +49,10 @@ vec3 CalculatePointLight(PointLight inPointLight, vec3 inNormal, vec3 inFragment
 
 void main()
 {
-	const vec3 sampledDiffuseValue = vec3(texture(material.diffuse, TextureCoordinates));
+	const vec3 sampledDiffuseValueSRGB = vec3(texture(material.diffuse, TextureCoordinates));
+
+	const vec3 sampledDiffuseValue = pow(sampledDiffuseValueSRGB, vec3(2.2));
+
 	const vec3 sampledSpecularValue = vec3(texture(material.specular, TextureCoordinates));
 
 	const vec3 normal = normalize(Normal);

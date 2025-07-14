@@ -108,3 +108,5 @@ workspace "OpenGL_Journey"
     -- AdvancedLighting
     -----------------------------------------------------------------------------------
     dofile("chapters/AdvancedLighting/5.1-AdvancedLighting/premake5.lua")
+
+    dofile("chapters/AdvancedLighting/5.2-GammaCorrection/premake5.lua")
