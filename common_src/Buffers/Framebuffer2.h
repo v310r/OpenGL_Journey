@@ -67,7 +67,14 @@ public:
 
 	void ClearAttachment(uint32_t attachmentIndex, int value);
 
-	uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const;
+	uint32_t GetColorAttachmentId(uint32_t index = 0) const;
+	uint32_t GetDepthAttachmentId() const;
+
+	uint32_t GetColorAttachmentTextureUnit(uint32_t index = 0) const;
+	uint32_t GetDepthAttachmentTextureUnit() const;
+
+	void BindColorAttachment(uint32_t index = 0) const;
+	void BindDepthAttachment() const;
 
 	const FramebufferSpecification& GetSpecification() const;
 

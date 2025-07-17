@@ -20,6 +20,8 @@ public:
 
 	static void BeginScene(const FlyCamera& camera, float windowWidth = 800.0f, float windowHeight = 800.0f);
 
+	static void BeginSceneOrthographic(const FlyCamera& camera, float nearPlane = 1.0f, float farPlane = 7.5f);
+
 	static void Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Shader>& shader, const SDrawSettings& drawSettings = SDrawSettings());
 
 	static void Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Material>& Material, const SDrawSettings& drawSettings = SDrawSettings());

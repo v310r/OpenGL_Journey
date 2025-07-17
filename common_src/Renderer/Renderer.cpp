@@ -23,6 +23,12 @@ void Renderer::BeginScene(const FlyCamera& camera, float windowWidth /*= 800.0f*
 	Renderer::SetProjection(glm::perspective(glm::radians(camera.GetZoom()), windowWidth / windowHeight, 0.1f, 300.0f));
 }
 
+void Renderer::BeginSceneOrthographic(const FlyCamera& camera, float nearPlane, float farPlane)
+{
+	Renderer::SetView(camera.GetViewMatrix());
+	Renderer::SetProjection(glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane));
+}
+
 void Renderer::Draw(const std::shared_ptr<VertexArray>& vao, const std::shared_ptr<Shader>& shader, const SDrawSettings& drawSettings /*= SDrawSettings()*/)
 {
 	shader->Bind();

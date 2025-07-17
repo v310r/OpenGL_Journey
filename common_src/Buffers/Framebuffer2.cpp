@@ -59,9 +59,12 @@ namespace Utils
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+			float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 		}
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
@@ -177,6 +180,7 @@ void Framebuffer2::Invalidate()
 	{
 		// Only depth-pass
 		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
 	}
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -231,9 +235,36 @@ void Framebuffer2::ClearAttachment(uint32_t attachmentIndex, int value)
 	glClearTexImage(m_ColorAttachments[attachmentIndex], 0, Utils::FBTextureFormatToGL(spec.TextureFormat), GL_INT, &value);
 }
 
-uint32_t Framebuffer2::GetColorAttachmentRendererID(uint32_t index /*= 0*/) const
+uint32_t Framebuffer2::GetColorAttachmentId(uint32_t index /*= 0*/) const
 {
 	return m_ColorAttachments[index];
+}
+
+uint32_t Framebuffer2::GetDepthAttachmentId() const
+{
+	return m_DepthAttachment;
+}
+
+uint32_t Framebuffer2::GetColorAttachmentTextureUnit(uint32_t index /*= 0*/) const
+{
+	return 31 - index;
+}
+
+uint32_t Framebuffer2::GetDepthAttachmentTextureUnit() const
+{
+	return 31 -m_ColorAttachments.size();
+}
+
+void Framebuffer2::BindColorAttachment(uint32_t index /*= 0*/) const
+{
+	glActiveTexture(GL_TEXTURE31 - index);
+	glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), m_ColorAttachments[index]);
+}
+
+void Framebuffer2::BindDepthAttachment() const
+{
+	glActiveTexture(GL_TEXTURE31 - m_ColorAttachments.size());
+	glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), m_DepthAttachment);
 }
 
 const FramebufferSpecification& Framebuffer2::GetSpecification() const

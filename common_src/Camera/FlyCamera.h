@@ -59,6 +59,17 @@ public:
 		UpdateCameraVectors();
 	}
 
+	float GetPitch() const
+	{
+		return m_Pitch;
+	}
+
+	void SetPitch(float value)
+	{
+		m_Pitch = value;
+		UpdateCameraVectors();
+	}
+
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void UpdateCameraVectors();
