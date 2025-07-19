@@ -268,14 +268,14 @@ int main()
 	std::shared_ptr<CubemapTexture> skyboxTexture = std::make_shared<CubemapTexture>(std::string(ASSETS_PATH) + "/skybox/", CubemapSourceTextureList
 	{
 		{
-			{ "universe_right.png",	CubemapTextureOrientation::Right	},
-			{ "universe_left.png",	CubemapTextureOrientation::Left		},
-			{ "universe_top.png",	CubemapTextureOrientation::Top		},
-			{ "universe_bottom.png", CubemapTextureOrientation::Bottom	},
+			{ "universe_right.png",	ECubemapTextureOrientation::Right	},
+			{ "universe_left.png",	ECubemapTextureOrientation::Left		},
+			{ "universe_top.png",	ECubemapTextureOrientation::Top		},
+			{ "universe_bottom.png", ECubemapTextureOrientation::Bottom	},
 
 			// these two below were swapped intentionally to display everything correctly
-			{ "universe_back.png",	CubemapTextureOrientation::Front	},
-			{ "universe_front.png",	CubemapTextureOrientation::Back		}
+			{ "universe_back.png",	ECubemapTextureOrientation::Front	},
+			{ "universe_front.png",	ECubemapTextureOrientation::Back		}
 		}
 	});
 

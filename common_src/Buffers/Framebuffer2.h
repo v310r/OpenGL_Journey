@@ -2,7 +2,10 @@
 
 #include <cstdint>
 #include <vector>
+#include <memory>
 
+
+class CubemapTexture;
 
 enum class FramebufferTextureFormat
 {
@@ -53,6 +56,10 @@ class Framebuffer2
 {
 public:
 	Framebuffer2(const FramebufferSpecification& spec);
+
+	// assume we use it for shadow mapping
+	Framebuffer2(const std::shared_ptr<CubemapTexture>& inCubemapTexture);
+
 	~Framebuffer2();
 
 	void Invalidate();
@@ -88,4 +95,8 @@ private:
 	uint32_t m_DepthAttachment = 0;
 
 	uint32_t m_Id = 0;
+
+	uint32_t m_CubemapTextureId = 0; // used only if we use cubemap texture for shadow mapping
+
+	bool bUsingCubemapTexture = false;
 };

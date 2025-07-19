@@ -90,58 +90,126 @@ struct SQuad
 
 void OnImGuiUpdate(SQuad& inPlatformEntity, DirectionalLight& inDirLight, SPointLightCube& inPointLightCube);
 
+static const std::array<glm::vec3, 4> s_platformPositions =
+{
+	glm::vec3{ 0.0f, -6.0f, 0.0f },
+	glm::vec3{ 0.0f,  6.0f, 0.0f },
+	//glm::vec3{ 3.0f,  0.0f, 0.0f },
+	glm::vec3{ 0.0f, 0.0f, 6.0f  },
+	glm::vec3{ 0.0f, 0.0f, -6.0f }
+};
+
+static const std::array<glm::vec3, 4> s_platformRotations =
+{
+	glm::vec3{ 0.0f, 0.0f, 0.0f },
+	glm::vec3{ 180.0f,  0.0f, 0.0f},
+	glm::vec3{ 270.0f, 0.0f, 0.0f },
+	glm::vec3{ 90.0f, 0.0f, 0.0f }
+};
+
+static const std::array<glm::vec3, 5> s_cubePositions =
+{
+	glm::vec3{ -4.0f, 0.0f, 2.0f },
+	glm::vec3{ 5.0f,  0.0f, -2.0f},
+	glm::vec3{ -8.0f, 2.0f, 0.0f },
+	glm::vec3{ 0.0f, 4.0f, 0.0f },
+	glm::vec3{ 0.0f, -4.0f, 0.0f }
+};
+
+static const std::array<glm::vec3, 5> s_cubeRotations =
+{
+	glm::vec3{ 33.0f, 12.0f, 0.0f },
+	glm::vec3{ 5.0f,  0.0f, 15.0f},
+	glm::vec3{ 80.0f, 70.0f, 0.0f },
+	glm::vec3{ 450.0f, 0.0f, 45.0f },
+	glm::vec3{ 0.0f, 0.0f, 0.0f }
+};
+
+constexpr float shadowMapNearPlane = 1.0f;
+constexpr float shadowMapFarPlane = 25.0f;
+
+static std::array<glm::mat4, 6> s_ShadowTransforms;
+
 void RenderScene(const std::shared_ptr<UniformBuffer>& cameraUniformBuffer, SQuad& platformEntity, std::shared_ptr<Shader> shader, DirectionalLight& directionalLight, SPointLightCube& pointLightCube, std::shared_ptr<VertexArray> quadVAO, SCube& cubeEntity, bool bIsDepthPass = false)
 {
 	cameraUniformBuffer->SetData(&Renderer::GetView(), sizeof(glm::mat4), 0);
 	cameraUniformBuffer->SetData(&Renderer::GetProjection(), sizeof(glm::mat4), sizeof(glm::mat4));
 
-	// PLATFORM
+	if (!bIsDepthPass)
 	{
-		platformEntity.MaterialData->Bind();
-		if (bIsDepthPass)
+		shader->SetFloat3("worldLightPos", glm::vec4(pointLightCube.Transform.Translation, 1.0f));
+	}
+
+	if (bIsDepthPass)
+	{
+		shader->Bind();
+		for (int i = 0; i < 6; ++i)
 		{
-			shader->Bind();
+			shader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", s_ShadowTransforms[i]);
 		}
 
-		shader->SetDirectionalLight(directionalLight, "directionalLight", directionalLight.GetTransform());
-		shader->SetPointLight(pointLightCube.PointLightData, "pointLight", pointLightCube.Transform);
+		shader->SetFloat3("lightPos", pointLightCube.Transform.Translation);
+		shader->SetFloat("farPlane", shadowMapFarPlane);
+	}
 
-		glm::mat4 platformModel = UtilityFunctions::CalculateTransformMatrix(platformEntity.Transform);
-		shader->SetMat4("model", platformModel);
-		shader->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * platformModel))));
+	// PLATFORM
+	{
+		for (int i = 0; i < s_platformPositions.size(); ++i)
+		{
+			platformEntity.MaterialData->Bind();
+			if (bIsDepthPass)
+			{
+				shader->Bind();
+			}
 
-		Renderer::Draw(quadVAO, shader);
+			shader->SetDirectionalLight(directionalLight, "directionalLight", directionalLight.GetTransform());
+			shader->SetPointLight(pointLightCube.PointLightData, "pointLight", pointLightCube.Transform);
+
+			STransform currentPlatformTransform = platformEntity.Transform;
+			currentPlatformTransform.Translation = s_platformPositions[i];
+			currentPlatformTransform.Rotation = platformEntity.Transform.Rotation + s_platformRotations[i];
+			currentPlatformTransform.Scale = platformEntity.Transform.Scale;
+
+			glm::mat4 platformModel = UtilityFunctions::CalculateTransformMatrix(currentPlatformTransform);
+			shader->SetMat4("model", platformModel);
+			shader->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * platformModel))));
+
+			Renderer::Draw(quadVAO, shader);
+		}
 	}
 
 	//CUBE
 	{
-		cubeEntity.MaterialData->Bind();
-		if (bIsDepthPass)
+		for (int i = 0; i < s_cubePositions.size(); ++i)
 		{
-			shader->Bind();
+			cubeEntity.MaterialData->Bind();
+			if (bIsDepthPass)
+			{
+				shader->Bind();
+			}
+
+			shader->SetDirectionalLight(directionalLight, "directionalLight", directionalLight.GetTransform());
+			shader->SetPointLight(pointLightCube.PointLightData, "pointLight", pointLightCube.Transform);
+
+			STransform currentCubeTransform = cubeEntity.Transform;
+			currentCubeTransform.Translation = s_cubePositions[i];
+			currentCubeTransform.Rotation = cubeEntity.Transform.Rotation + s_cubeRotations[i];
+			currentCubeTransform.Scale = cubeEntity.Transform.Scale;
+
+			glm::mat4 cubeModel = UtilityFunctions::CalculateTransformMatrix(currentCubeTransform);
+			shader->SetMat4("model", cubeModel);
+			shader->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * cubeModel))));
+
+			Renderer::Draw(cubeEntity.VAO, shader);
 		}
 
-		shader->SetDirectionalLight(directionalLight, "directionalLight", directionalLight.GetTransform());
-		shader->SetPointLight(pointLightCube.PointLightData, "pointLight", pointLightCube.Transform);
-
-
-		glm::mat4 cubeModel = UtilityFunctions::CalculateTransformMatrix(cubeEntity.Transform);
-		shader->SetMat4("model", cubeModel);
-		shader->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * cubeModel))));
-
-		Renderer::Draw(cubeEntity.VAO, shader);
 	}
 
 	// UNLIT POINTLIGHT CUBE
+	if (!bIsDepthPass)
 	{
 		pointLightCube.MaterialData->Bind();
 		std::shared_ptr<Shader> unlitShader = pointLightCube.MaterialData->GetShader();
-		if (bIsDepthPass)
-		{
-			unlitShader = shader;
-			unlitShader->Bind();
-		}
-
 		glm::mat4 pointLightModel = UtilityFunctions::CalculateTransformMatrix(pointLightCube.Transform);
 		unlitShader->SetMat4("model", pointLightModel);
 		unlitShader->SetMat3("normalMatrixTransform", glm::transpose(glm::inverse(glm::mat3(Renderer::GetView() * pointLightModel))));
@@ -266,6 +334,8 @@ int main()
 
 	std::shared_ptr<Shader> depthMapShader = std::make_shared<Shader>("shaders/SimpleDepthShader.vert", "shaders/SimpleDepthShader.frag");
 
+	std::shared_ptr<Shader> omnidirectionalDepthMapShader = std::make_shared<Shader>("shaders/CubemapDepthShader.vert", "shaders/CubemapDepthShader.frag", "shaders/CubemapDepthShader.geom");
+
 	std::shared_ptr<Shader> postProcessShader = std::make_shared<Shader>("shaders/PostProcess.vert", "shaders/PostProcess.frag");
 
 	std::shared_ptr<Texture> stubTexture = std::make_shared<Texture>(std::string(ASSETS_PATH) + "/BlackTexture.png", 0);
@@ -326,8 +396,8 @@ int main()
 		pointLightCube.VAO = cubeVAO;
 		pointLightCube.MaterialData = std::make_shared<SimpleMaterial>(unlitShader);
 		pointLightCube.SetColor(glm::vec3(1.0f));
-		pointLightCube.Transform.Translation = glm::vec3(-3.0f, -6.0f, -3.0f);
-		pointLightCube.PointLightData.SetIntensity(0.0f);
+		pointLightCube.Transform.Translation = glm::vec3(-2.0f, -2.0f, 0.0f);
+		pointLightCube.PointLightData.SetIntensity(1.1f);
 	}
 
 	std::shared_ptr<CubemapTexture> skyboxTexture = std::make_shared<CubemapTexture>(std::string(ASSETS_PATH) + "/skybox/", CubemapSourceTextureList
@@ -356,14 +426,22 @@ int main()
 		skyboxCube.VAO = skyboxCubeVAO;
 	}
 
-	FramebufferSpecification depthMapSpec;
-	depthMapSpec.Width = 1024;
-	depthMapSpec.Height = 1024;
-	depthMapSpec.Attachments = { FramebufferTextureFormat::Depth };
+	std::shared_ptr<CubemapTexture> omnidirectionalShadowMapTexture = std::make_shared<CubemapTexture>(SCubemapTextureConstructionSettings
+	{
+		ECubemapType::ShadowMap,
 
-	Framebuffer2 depthMapFramebuffer(depthMapSpec);
+		// width 
+		1024.0f,
 
-	FlyCamera lightCamera(glm::vec3(0.0f, 0.0f, 0.0f));
+		// height
+		1024.0f
+	});
+
+	std::shared_ptr<Framebuffer2> omnidirectionalShadowMapFramebuffer = std::make_shared<Framebuffer2>(omnidirectionalShadowMapTexture);
+
+	const float shadowMapAspect = omnidirectionalShadowMapTexture->GetWidth() / omnidirectionalShadowMapTexture->GetHeight();
+
+	const glm::mat4 shadowMapProjection = glm::perspective(glm::radians(90.0f), shadowMapAspect, shadowMapNearPlane, shadowMapFarPlane);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -399,29 +477,28 @@ int main()
 
 
 		// depth pass
-		depthMapFramebuffer.Bind();
+		omnidirectionalShadowMapFramebuffer->Bind();
 		glDepthFunc(GL_LESS);
-		glCullFace(GL_FRONT);
+		//glCullFace(GL_FRONT);
+		
+		s_ShadowTransforms[0] = shadowMapProjection * glm::lookAt(pointLightCube.Transform.Translation, pointLightCube.Transform.Translation + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+		s_ShadowTransforms[1] = shadowMapProjection * glm::lookAt(pointLightCube.Transform.Translation, pointLightCube.Transform.Translation + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+		s_ShadowTransforms[2] = shadowMapProjection * glm::lookAt(pointLightCube.Transform.Translation, pointLightCube.Transform.Translation + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0));
+		s_ShadowTransforms[3] = shadowMapProjection * glm::lookAt(pointLightCube.Transform.Translation, pointLightCube.Transform.Translation + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0));
+		s_ShadowTransforms[4] = shadowMapProjection * glm::lookAt(pointLightCube.Transform.Translation, pointLightCube.Transform.Translation + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0));
+		s_ShadowTransforms[5] = shadowMapProjection * glm::lookAt(pointLightCube.Transform.Translation, pointLightCube.Transform.Translation + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0));
 
-		lightCamera.SetPosition(directionalLight.GetTransform().Translation);
-		lightCamera.SetYaw(directionalLight.GetTransform().Rotation.y + 90.0f);
-		lightCamera.SetPitch(directionalLight.GetTransform().Rotation.x + 180.0f);
-
-
-		Renderer::BeginSceneOrthographic(lightCamera, 1.0f, 300.0f);
-		//Renderer::BeginScene(lightCamera, g_WindowWidth, g_WindowHeight);
+		Renderer::BeginScene(g_Camera, g_WindowWidth, g_WindowHeight);
 		glDisable(GL_FRAMEBUFFER_SRGB);
-
-		glm::mat4 depthMapProj = Renderer::GetProjection();
 
 		RenderCommand::SetClearColor(glm::vec4(g_ClearColor, 1.0f));
 		RenderCommand::Clear();
-
-		RenderScene(cameraUniformBuffer, platformEntity, depthMapShader, directionalLight, pointLightCube, quadVAO, cubeEntity, true);
-
-		glCullFace(GL_BACK);
+		
+		RenderScene(cameraUniformBuffer, platformEntity, omnidirectionalDepthMapShader, directionalLight, pointLightCube, quadVAO, cubeEntity, true);
+		
+		//glCullFace(GL_BACK);
 		Renderer::EndScene();
-		depthMapFramebuffer.Unbind();
+		omnidirectionalShadowMapFramebuffer->Unbind();
 
 		// render pass
 		Renderer::BeginScene(g_Camera, g_WindowWidth, g_WindowHeight);
@@ -441,9 +518,9 @@ int main()
 		//Renderer::Draw(postProcessQuadVAO, postProcessShader);
 
 		litShader->Bind();
-		litShader->SetMat4("lightViewProjMatrix", depthMapProj* lightCamera.GetViewMatrix());
-		depthMapFramebuffer.BindDepthAttachment();
-		litShader->SetInt("shadowMap", depthMapFramebuffer.GetDepthAttachmentTextureUnit());
+		omnidirectionalShadowMapFramebuffer->BindDepthAttachment();
+		litShader->SetInt("depthMap", omnidirectionalShadowMapFramebuffer->GetDepthAttachmentTextureUnit());
+		litShader->SetFloat("shadowFarPlane", shadowMapFarPlane);
 
 		// RenderScene shouldn't override texture unit of shadow map, because we do not have that many textures
 		RenderScene(cameraUniformBuffer, platformEntity, litShader, directionalLight, pointLightCube, quadVAO, cubeEntity);

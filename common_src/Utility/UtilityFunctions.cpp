@@ -26,16 +26,16 @@ glm::mat4 UtilityFunctions::CalculateTransformMatrix(const STransform& transform
 	return model;
 }
 
-int32_t UtilityFunctions::ConvertCubemapTextureOrientationToOpenGL(CubemapTextureOrientation inOrientation)
+int32_t UtilityFunctions::ConvertCubemapTextureOrientationToOpenGL(ECubemapTextureOrientation inOrientation)
 {
 	switch (inOrientation)
 	{
-		case CubemapTextureOrientation::Right:	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-		case CubemapTextureOrientation::Left:	return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-		case CubemapTextureOrientation::Top:	return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-		case CubemapTextureOrientation::Bottom:	return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-		case CubemapTextureOrientation::Back:	return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-		case CubemapTextureOrientation::Front:	return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+		case ECubemapTextureOrientation::Right:		return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+		case ECubemapTextureOrientation::Left:		return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+		case ECubemapTextureOrientation::Top:		return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+		case ECubemapTextureOrientation::Bottom:	return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+		case ECubemapTextureOrientation::Back:		return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+		case ECubemapTextureOrientation::Front:		return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 
 		default: return -1;
 	}

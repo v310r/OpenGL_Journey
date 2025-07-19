@@ -150,6 +150,20 @@ Texture::Texture(const std::string& pathToFile, const STextureConstructionSettin
 	}
 }
 
+Texture::Texture(const STextureConstructionSettings& inSettings, float inWidth, float inHeight)
+{
+	if (!inSettings.bUsedForShadowMap)
+	{
+		LOG_ERROR("This constructor should be used only for shadow maps!");
+		return;
+	}
+
+	// for shadow maps we do not store the texture on our own, but rather delegate it to OpenGL
+	m_TextureHandle = {};
+
+	glTexImage2D(inSettings.TextureTarget, 0, GL_DEPTH_COMPONENT, inWidth, inHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+}
+
 Texture::~Texture()
 {
 	AssetManager::TryDeallocate(m_TextureHandle);

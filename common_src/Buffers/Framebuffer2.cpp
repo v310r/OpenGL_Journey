@@ -2,6 +2,7 @@
 
 #include "glad/glad.h"
 
+#include "Texture/CubemapTexture.h"
 #include "Utility/Log.h"
 
 
@@ -109,6 +110,27 @@ Framebuffer2::Framebuffer2(const FramebufferSpecification& spec)
 	}
 
 	Invalidate();
+}
+
+Framebuffer2::Framebuffer2(const std::shared_ptr<CubemapTexture>& inCubemapTexture)
+{
+	glCreateFramebuffers(1, &m_Id);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_Id);
+
+	m_CubemapTextureId = inCubemapTexture->GetId();
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_CubemapTextureId, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+
+	m_Specification.Width = inCubemapTexture->GetWidth();
+	m_Specification.Height = inCubemapTexture->GetHeight();
+
+	m_Specification.Attachments = {FramebufferTextureFormat::DEPTH24STENCIL8 };
+
+
+	bUsingCubemapTexture = true;
+
+	Unbind();
 }
 
 Framebuffer2::~Framebuffer2()
@@ -252,7 +274,7 @@ uint32_t Framebuffer2::GetColorAttachmentTextureUnit(uint32_t index /*= 0*/) con
 
 uint32_t Framebuffer2::GetDepthAttachmentTextureUnit() const
 {
-	return 31 -m_ColorAttachments.size();
+	return 31 - m_ColorAttachments.size();
 }
 
 void Framebuffer2::BindColorAttachment(uint32_t index /*= 0*/) const
@@ -263,8 +285,16 @@ void Framebuffer2::BindColorAttachment(uint32_t index /*= 0*/) const
 
 void Framebuffer2::BindDepthAttachment() const
 {
-	glActiveTexture(GL_TEXTURE31 - m_ColorAttachments.size());
-	glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), m_DepthAttachment);
+	if (bUsingCubemapTexture)
+	{
+		glActiveTexture(GL_TEXTURE31 - m_ColorAttachments.size());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTextureId);
+	}
+	else
+	{
+		glActiveTexture(GL_TEXTURE31 - m_ColorAttachments.size());
+		glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), m_DepthAttachment);
+	}
 }
 
 const FramebufferSpecification& Framebuffer2::GetSpecification() const

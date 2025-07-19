@@ -14,6 +14,8 @@ struct STextureConstructionSettings
 	int32_t TextureTarget = 0; // e.g. GL_TEXTURE_2D or GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, etc. for Y and Z
 
 	bool bUsedForCubemap = false;
+
+	bool bUsedForShadowMap = false; // if true, then texture will be used for shadow mapping, so it should be created with GL_DEPTH_COMPONENT as format
 };
 
 class Texture
@@ -23,6 +25,9 @@ public:
 	Texture(const std::string& pathToFile, int32_t textureUnit, bool bHasTransparencyChannel = true, const std::string& textureName = "Unknown");
 
 	Texture(const std::string& pathToFile, const STextureConstructionSettings& inSettings);
+
+	// this constructor is used for creating texture for shadow map
+	Texture(const STextureConstructionSettings& inSettings, float inWidth, float inHeight);
 
 	~Texture();
 
