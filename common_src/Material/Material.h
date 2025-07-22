@@ -26,6 +26,7 @@ public:
 
 	void SetDiffuse(const std::shared_ptr<Texture>& texture);
 	void SetSpecular(const std::shared_ptr<Texture>& texture);
+	void SetNormal(const std::shared_ptr<Texture>& texture);
 	void SetEmission(const std::shared_ptr<Texture>& texture);
 
 	void SetShininess(float value);
@@ -36,6 +37,7 @@ public:
 protected:
 	std::shared_ptr<Texture> m_DiffuseTexture;
 	std::shared_ptr<Texture> m_SpecularTexture;
+	std::shared_ptr<Texture> m_NormalTexture;
 	std::shared_ptr<Texture> m_EmissionTexture;
 	float m_Shininess = 0.1f;
 

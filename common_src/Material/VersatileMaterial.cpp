@@ -35,6 +35,11 @@ static std::string_view GetSpecularName()
 	return s_SpecularName;
 }
 
+static std::string_view GetNormalName()
+{
+	return s_SpecularName;
+}
+
 static std::string_view GetEmissionName()
 {
 	return s_EmissionName;

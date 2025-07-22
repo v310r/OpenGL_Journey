@@ -12,7 +12,7 @@ void ImGuiWrapper::Init(GLFWwindow* window, const char* glslVersion)
     ImGui::CreateContext();
     s_IO = &ImGui::GetIO();
     s_IO->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    s_IO->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    //s_IO->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     s_IO->ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     s_IO->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoAutoMerge = true;

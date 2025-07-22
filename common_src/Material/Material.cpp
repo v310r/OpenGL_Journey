@@ -7,6 +7,7 @@
 static std::string_view s_AmbientName = "material.ambient";
 static std::string_view s_DiffuseName = "material.diffuse";
 static std::string_view s_SpecularName = "material.specular";
+static std::string_view s_NormalName = "material.normal";
 static std::string_view s_EmissionName = "material.emission";
 static std::string_view s_ShininessName = "material.shininess";
 
@@ -23,6 +24,11 @@ static std::string_view GetDiffuseName()
 static std::string_view GetSpecularName()
 {
 	return s_SpecularName;
+}
+
+static std::string_view GetNormalName()
+{
+	return s_NormalName;
 }
 
 static std::string_view GetEmissionName()
@@ -54,6 +60,12 @@ void Material::Bind()
 	{
 		m_ShaderRef->SetInt(GetSpecularName(), m_SpecularTexture->GetTextureUnit());
 		m_SpecularTexture->BindAndActivateUnit();
+	}
+
+	if (m_NormalTexture.get())
+	{
+		m_ShaderRef->SetInt(GetNormalName(), m_NormalTexture->GetTextureUnit());
+		m_NormalTexture->BindAndActivateUnit();
 	}
 
 	if (m_EmissionTexture.get())
@@ -93,6 +105,11 @@ void Material::SetDiffuse(const std::shared_ptr<Texture>& texture)
 void Material::SetSpecular(const std::shared_ptr<Texture>& texture)
 {
 	m_SpecularTexture = texture;
+}
+
+void Material::SetNormal(const std::shared_ptr<Texture>& texture)
+{
+	m_NormalTexture = texture;
 }
 
 void Material::SetEmission(const std::shared_ptr<Texture>& texture)
