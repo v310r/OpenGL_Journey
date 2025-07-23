@@ -116,3 +116,5 @@ workspace "OpenGL_Journey"
     dofile("chapters/AdvancedLighting/5.3-Shadows-PointShadows/premake5.lua")
 
     dofile("chapters/AdvancedLighting/5.4-NormalMapping/premake5.lua")
+
+    dofile("chapters/AdvancedLighting/5.5-ParallaxMapping/premake5.lua")
