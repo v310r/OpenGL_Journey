@@ -12,7 +12,7 @@
 CubemapTexture::CubemapTexture(const std::string& inCubemapFolder, const CubemapSourceTextureList& inTextureSources)
 {
 	glGenTextures(1, &m_Id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_Id);
+	Bind();
 
 	uint32_t index = 0;
 
@@ -50,12 +50,14 @@ CubemapTexture::CubemapTexture(const std::string& inCubemapFolder, const Cubemap
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	Unbind();
 }
 
 CubemapTexture::CubemapTexture(const SCubemapTextureConstructionSettings& inConstructionSettings)
 {
 	glGenTextures(1, &m_Id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_Id);
+	Bind();
 
 	if (inConstructionSettings.CubemapType != ECubemapType::ShadowMap)
 	{
@@ -91,6 +93,8 @@ CubemapTexture::CubemapTexture(const SCubemapTextureConstructionSettings& inCons
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	Unbind();
 }
 
 CubemapTexture::~CubemapTexture()
@@ -100,6 +104,7 @@ CubemapTexture::~CubemapTexture()
 
 void CubemapTexture::Bind()
 {
+	glActiveTexture(GL_TEXTURE0 + 0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_Id);
 }
 

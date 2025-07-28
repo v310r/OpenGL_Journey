@@ -2,7 +2,6 @@
 
 #define POINT_LIGHTS_NUM 4  
 
-
 out vec4 FragColor;
 
 struct Material

@@ -19,6 +19,8 @@ enum class FramebufferTextureFormat
 	// Depth/stencil
 	DEPTH24STENCIL8,
 
+	RGBA16F,
+
 	// Defaults
 	Depth = DEPTH24STENCIL8
 };
