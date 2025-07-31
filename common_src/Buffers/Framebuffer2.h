@@ -83,6 +83,7 @@ public:
 	uint32_t GetDepthAttachmentTextureUnit() const;
 
 	void BindColorAttachment(uint32_t index = 0) const;
+	void BindColorAttachment(uint32_t index, uint32_t activeTexture) const;
 	void BindDepthAttachment() const;
 
 	const FramebufferSpecification& GetSpecification() const;

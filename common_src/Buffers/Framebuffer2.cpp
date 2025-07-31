@@ -288,6 +288,12 @@ void Framebuffer2::BindColorAttachment(uint32_t index /*= 0*/) const
 	glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), m_ColorAttachments[index]);
 }
 
+void Framebuffer2::BindColorAttachment(uint32_t index /*= 0*/, uint32_t activeTexture) const
+{
+	glActiveTexture(GL_TEXTURE0 + activeTexture);
+	glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), m_ColorAttachments[index]);
+}
+
 void Framebuffer2::BindDepthAttachment() const
 {
 	if (bUsingCubemapTexture)
