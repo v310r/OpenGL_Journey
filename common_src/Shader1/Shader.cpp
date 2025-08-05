@@ -157,7 +157,7 @@ uint32_t Shader::CompileShader(const std::string& shaderPath, EShaderType shader
 	}
 	catch (std::ifstream::failure& ex)
 	{
-		LOG_ERROR("Shader file not succesfully read");
+		LOG_ERROR("Shader file not succesfully read: {0}", shaderPath.data());
 	}
 
 	const char* const shaderCodeResult = shaderCode.data();

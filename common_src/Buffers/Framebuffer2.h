@@ -12,6 +12,7 @@ enum class FramebufferTextureFormat
 	None = 0,
 
 	// Color
+	RGBA,
 	RGBA8,
 	RGB8,
 	RED_INTEGER,
