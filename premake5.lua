@@ -124,3 +124,5 @@ workspace "OpenGL_Journey"
     dofile("chapters/AdvancedLighting/5.7-Bloom/premake5.lua")
 
     dofile("chapters/AdvancedLighting/5.8-DeferredShading/premake5.lua")
+
+    dofile("chapters/AdvancedLighting/5.9-SSAO/premake5.lua")
